@@ -1,7 +1,7 @@
 
 # Web Highlighter
 
-### The simplest way to save ideas and quotes from any webpage. Free. Private. No login.
+### The simplest way to save ideas and quotes from any webpage, with your own notes. Free. Private. No login.
 
 Stop losing track of important snippets across the web. Web Highlighter lets you capture the essential parts of any article, blog post, or document right from your browser.
 
@@ -15,7 +15,7 @@ Stop losing track of important snippets across the web. Web Highlighter lets you
 
 <br/>
 
-![Highlighting a sentence on a webpage](https://github.com/nextfiveinc/web_highlighter/blob/main/screenshots/01_select_text.png)
+<center><img src="https://github.com/nextfiveinc/web_highlighter/blob/main/screenshots/01_select_text.png" alt="Screenshot of the highlighting and saving flow" width="500"></center>
 
 ## Why You'll Love Web Highlighter
 
@@ -28,7 +28,7 @@ Stop losing track of important snippets across the web. Web Highlighter lets you
 *   **All Your Highlights in One Place**
     See everything you've saved in a clean, simple interface, organized by date and source. Your research is always just a click away.
 
-![Viewing all saved highlights in the extension popup](https://github.com/nextfiveinc/web_highlighter/raw/main/screenshots/02_view_export_notes.png)
+<center><img src="https://github.com/nextfiveinc/web_highlighter/blob/main/screenshots/02_view_export_notes.png" alt="Screenshot of your saved notes view" width="450"><center>
 
 *   **Flows into Your Workflow**
     With one-click Markdown export, all your highlights and notes are ready to be dropped into your favorite note-taking apps like **Obsidian, Logseq, Notion, Joplin, or Roam Research**.
