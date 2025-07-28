@@ -44,4 +44,4 @@ Stop losing track of important snippets across the web. Web Highlighter lets you
 
 ---
 
-*Interested in the code? Check out the [**open-source repository on GitHub**](https://github.com/nextfiveinc/web-highlighter).*
+*Interested in the code? Check out the [**open-source repository on GitHub**](https://github.com/nextfiveinc/web_highlighter).*
