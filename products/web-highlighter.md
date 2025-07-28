@@ -1,7 +1,7 @@
 
 # Web Highlighter
 
-### Your Digital Highlighter for the Web. Save quotes, research, and ideas directly into Markdown.
+### The simplest way to save ideas and quotes from any webpage. Free. Private. No login.
 
 Stop losing track of important snippets across the web. Web Highlighter lets you capture the essential parts of any article, blog post, or document right from your browser.
 
@@ -9,8 +9,9 @@ Stop losing track of important snippets across the web. Web Highlighter lets you
 
 | Get the Extension                                                                                                      |
 | :--------------------------------------------------------------------------------------------------------------------- |
-| [**Install for Google Chrome**](https://chrome.google.com/webstore/detail/your-extension-id)                           |
 | [**Install for Mozilla Firefox**](https://addons.mozilla.org/en-US/firefox/addon/web-highlighter/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)                     |
+| [**Coming soon for Google Chrome**](https://chrome.google.com/webstore/)                           |
+
 
 <br/>
 
