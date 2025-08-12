@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Some simple apps"
+title: "Next Five Things"
 ---
 ## Latest Writings
 <ul>
