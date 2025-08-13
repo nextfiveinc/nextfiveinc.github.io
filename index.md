@@ -2,7 +2,7 @@
 layout: default
 title: "Next Five Things"
 ---
-## Latest Writings
+## **Latest Writings**
 <ul>
   {% for post in site.posts %}
     <li>
