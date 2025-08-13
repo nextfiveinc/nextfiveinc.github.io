@@ -12,12 +12,14 @@ category: product
 
 Stop losing track of important snippets across the web. Web Highlighter lets you capture the essential parts of any article, blog post, or document right from your browser.
 
+<!--more-->
+
 <br/>
 
 | Get the Extension                                                                                                      |
 | :--------------------------------------------------------------------------------------------------------------------- |
 | [**Install for Mozilla Firefox**](https://addons.mozilla.org/en-US/firefox/addon/web-highlighter/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)                     |
-| [**Coming soon for Google Chrome**](https://chrome.google.com/webstore/)                           |
+| [**Install for Google Chrome**](https://chromewebstore.google.com/detail/web-highlighter/emiaeicgfomchcecbhdfnjjegkpbphjh?utm_source=item-share-cb)                           |
 
 
 <br/>
