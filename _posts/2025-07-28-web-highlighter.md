@@ -1,12 +1,10 @@
 ---
 layout: default
-title: "Introducing Web-Highlighter: simplest way to save ideas and quotes from any webpage"
+title: "Introducing Web-Highlighter"
 date: 2025-07-28
 permalink: /web-highlighter/
 category: product
 ---
-
-## Web Highlighter
 
 ### The simplest way to save ideas and quotes from any webpage, with your own notes. Free. Private. No login.
 
