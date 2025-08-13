@@ -6,7 +6,7 @@ permalink: /web-highlighter/
 category: product
 ---
 
-# Web Highlighter
+## Web Highlighter
 
 ### The simplest way to save ideas and quotes from any webpage, with your own notes. Free. Private. No login.
 
