@@ -13,10 +13,19 @@
       <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
       <p>{{ site.description }}</p>
       <nav>
-        <a href="{{ '/' | relative_url }}">Home</a>
+        
+        <a href="https://www.nextfive.in" target="_blank" rel="noopener noreferrer">Home</a>
+        
+        <!-- Link to blog's main feed (shows all posts) -->
+        <a href="{{ '/' | relative_url }}">All Posts</a>
+      
+        <!-- Link to the page that ONLY shows product posts -->
         <a href="{{ '/products/' | relative_url }}">Projects</a>
-        <a href="{{ '/musings/' | relative_url }}">Musings</a>
+        
+        <!-- Link to the page that ONLY shows general writing -->
+        <a href="{{ '/thoughts/' | relative_url }}">Thoughts</a>
       </nav>
+
     </header>
     <main>
       <!-- This is where the content from our .md files will go -->
