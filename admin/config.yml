@@ -4,7 +4,7 @@ backend:
   repo: nextfiveinc/nextfiveinc.github.io # Your repo path
   branch: main # The branch to commit to
   auth_type: implicit # Modern, recommended authentication flow
-  app_id: Ov23li1KWRah8wJzOH4C # <-- PASTE YOUR CLIENT ID HERE
+  app_id: Ov23li1KWRah8wJzOH4C 
 
 # This is where uploaded images will be stored
 media_folder: "assets/images"
