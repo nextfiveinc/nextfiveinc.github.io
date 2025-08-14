@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Introducing Web-Highlighter"
-date: 2025-07-28
+date: 2025-07-23
 permalink: /web-highlighter/
 category: product
 ---
@@ -51,4 +51,4 @@ Stop losing track of important snippets across the web. Web Highlighter lets you
 
 ---
 
-*Interested in the code? Check out the [**open-source repository on GitHub**](https://github.com/nextfiveinc/web_highlighter).*
+*For more details, pictures and the code, check out the [**Web-Highlighter repository on GitHub**](https://github.com/nextfiveinc/web_highlighter).*

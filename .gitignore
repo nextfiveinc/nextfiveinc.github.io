@@ -1,0 +1,9 @@
+# Ignore bundler config and local gems
+.bundle/
+vendor/bundle/
+
+# Ignore Jekyll build output
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
