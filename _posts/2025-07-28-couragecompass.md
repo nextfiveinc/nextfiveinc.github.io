@@ -6,8 +6,6 @@ permalink: /courage_compass/
 category: product
 ---
 
-# Courage Compass
-
 ### A private journal to help you overcome the fear of rejection. Free. Offline. No login.
 
 Build confidence and resilience by turning fear into a game. Courage Compass is your personal companion for [Rejection Therapy](https://www.ted.com/talks/jia_jiang_what_i_learned_from_100_days_of_rejection), helping you take small, courageous steps in a structured and reflective way.
