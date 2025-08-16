@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: "Introducing MicroAdventures"
 date: 2025-04-08
 permalink: /microadventures/

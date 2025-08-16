@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: "Introducing Web-Highlighter"
 date: 2025-07-23
 permalink: /web-highlighter/

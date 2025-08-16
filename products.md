@@ -4,7 +4,7 @@ title: "My Apps & Projects"
 permalink: /products/
 ---
 
-## My Apps & Projects
+## Apps & Projects
 
 <ul class="post-list">
   {% for post in site.categories.product %}

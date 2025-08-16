@@ -5,13 +5,14 @@ permalink: /thoughts/
 ---
 
 ## Thoughts
-My thoughts on software, design, and simplicity.
+On software, design, and simplicity and whatever else is on my mind.
 
 <ul class="post-list">
   {% for post in site.categories.blog %}
     <li>
       {%- if post.external_url -%}
-        <a href="{{ post.external_url }}" target="_blank" rel="noopener noreferrer" class="post-card external-link">
+        <!-- For external posts, link to the local post page first (not directly to external_url) -->
+        <a href="{{ post.url | relative_url }}" class="post-card external-link">
       {%- else -%}
         <a href="{{ post.url | relative_url }}" class="post-card">
       {%- endif -%}

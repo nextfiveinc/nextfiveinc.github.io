@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: "Introducing CourageCompass"
 date: 2025-07-28
 permalink: /courage_compass/
