@@ -4,6 +4,7 @@ title: "Introducing Web-Highlighter"
 date: 2025-07-23
 permalink: /web-highlighter/
 category: product
+tags: [🤖 AI-assisted]
 ---
 
 ### The simplest way to save ideas and quotes from any webpage, with your own notes. Free. Private. No login.

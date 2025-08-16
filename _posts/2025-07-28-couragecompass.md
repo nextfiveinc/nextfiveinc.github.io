@@ -4,6 +4,7 @@ title: "Introducing CourageCompass"
 date: 2025-07-28
 permalink: /courage_compass/
 category: product
+tags: [🤖 AI-assisted]
 ---
 
 ### A private journal to help you overcome the fear of rejection. Free. Offline. No login.

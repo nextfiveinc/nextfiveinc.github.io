@@ -3,6 +3,7 @@ layout: post
 title: "Software's Blog Era"
 date: 2025-07-29
 category: blog
+tags: []
 excerpt: "The era of software blogs is upon us. As AI reshapes how we create new software, it will also change how we consume it."
 external_url: "https://world.hey.com/akumar/software-s-blog-era-2812c56c"
 ---

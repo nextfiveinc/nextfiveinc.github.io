@@ -4,6 +4,7 @@ title: "Introducing MicroAdventures"
 date: 2025-04-08
 permalink: /microadventures/
 category: product
+tags: [🤖 AI-assisted]
 ---
 
 ### Find and track small, local adventures to break your routine. Free. Private. No login.
