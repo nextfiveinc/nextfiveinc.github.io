@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide (v32 - Onboarding modal)</title>
+        <style>
+            /* --- Modern Color Palette & Styles --- */
+            :root {
+                --color-primary: #3498db; --color-primary-light: #e0e7ff; --color-secondary: #475569;
+                --color-text: #1e293b; --color-text-secondary: #64748b; --color-background: #f4f0e9;
+                --color-surface: #e6ded6; --color-border: #e8cbbf; --color-success: #10b981;
+                --color-danger: #f43f5e; --color-warning: #f59e0b; --color-blocked-bg: #ffe4e6;
+                --color-bored-bg: #fef3c7; --color-stressed-bg: #fee2e2; --color-link: #3a5973;
+                --color-button-text: #ffffff; --color-modal-glass-bg: rgba(255, 255, 255, 0.5); --color-modal-bg:#BFDCE8;
+            }
+
+            body.dark-theme {
+                --color-primary: #3498db; --color-primary-light: rgba(79, 70, 229, 0.2); --color-secondary: #94a3b8;
+                --color-text: #e2e8f0; --color-text-secondary: #94a3b8; --color-background: #0f172a;
+                --color-surface: #1e293b; --color-border: #334155; --color-success: #34d399;
+                --color-danger: #fb7185; --color-warning: #facc15; --color-blocked-bg: rgba(244, 63, 94, 0.15);
+                --color-bored-bg: rgba(245, 158, 11, 0.15); --color-stressed-bg: rgba(239, 68, 68, 0.15); --color-link: #4dabf7;
+                --color-button-text: #ffffff; --color-modal-glass-bg: rgba(30, 41, 59, 0.4); --color-modal-bg:#55473382;
+            }
+
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            html, body { height: 100%; overflow: hidden; }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                color: var(--color-text); background-color: var(--color-background);
+                display: flex; flex-direction: column; font-size: 16px; line-height: 1.6; padding: 0 10px;
+            }
+            h1,h2,h3,h4,h5,h6{ color: var(--color-secondary); margin-bottom: 1rem; margin-top: 1.2rem; font-weight: 600; }
+            h1{font-size: 1.8em} h2{font-size: 1.5em} h3{font-size: 1.3em}
+            a { color: var(--color-link); text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            hr { border: none; border-top: 1px solid var(--color-border); margin: 1.5em 0; }
+
+            #app-header, #app-footer {
+                background-color: var(--color-surface); padding: 10px 5px; border-bottom: 1px solid var(--color-border);
+                position: sticky; z-index: 100; flex-shrink: 0;
+                margin: 0 -10px; padding-left: 15px; padding-right: 15px;
+            }
+            #app-footer { border-bottom: none; border-top: 1px solid var(--color-border); }
+            #header-top-row { display: flex; justify-content: center; align-items: center; margin-bottom: 8px; gap: 10px;} /* FIX: Use center and gap */
+            #header-goal-row { font-size: .9em; color: var(--color-text-secondary); text-align: center; min-height: 2.5em; padding: 5px 10px; }
+            #header-goal-row strong { color: var(--color-primary); }
+            #main-content-area { flex-grow: 1; overflow-y: auto; padding: 15px 5px; }
+
+            button, .btn {
+                display: inline-block; padding: 8px 15px; font-size: 0.75em; font-weight: 500;
+                cursor: pointer; border: none; border-radius: 8px;
+                background-color: var(--color-primary); color: var(--color-button-text);
+                transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+                margin: 5px; text-align: center; vertical-align: middle;
+            }
+            button:hover:not(:disabled), .btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+            button:disabled, .btn:disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+            .btn-secondary { background-color: var(--color-border); color: var(--color-secondary); }
+            .btn-danger { background-color: var(--color-danger); color: var(--color-button-text); }
+            .btn-success { background-color: var(--color-success); color: var(--color-button-text); }
+            .btn-move { background-color: #94a3b8; color: #1e293b; }
+            .btn-link { background: none; border: none; color: var(--color-link); text-decoration: underline; padding: 0 5px; margin: 0 5px; font-size: .9em; }
+            .btn-icon{background:0 0;border:none;padding:8px;margin:0 5px;cursor:pointer;border-radius:50%;line-height:0}.btn-icon:hover{background-color:rgba(150,150,150,.1)}.btn-icon svg{width:22px;height:22px;stroke:var(--color-secondary);stroke-width:1.5;transition:stroke .2s ease}.btn-icon:hover svg{stroke:var(--color-primary)}
+
+            .back-button:hover, #theme-toggle:hover {background: var(--color-border);}
+
+            input,textarea{padding:10px;font-size:1em;border:1px solid var(--color-border);border-radius:8px;margin-bottom:10px;width:100%; background-color: var(--color-background); color: var(--color-text);}
+            select{padding:10px;font-size:1em;border:1px solid var(--color-border);border-radius:8px;margin-bottom:10px;width:100%; background-color: var(--color-surface); color: var(--color-text);}
+            input:focus, textarea:focus, select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px var(--color-primary-light); outline: none; }
+            textarea{min-height:150px;resize:vertical;font-family:monospace}
+
+            .app-view{display:none}.app-view.active{display:block}
+            .view-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+            .view-header h2 { margin-bottom: 0; }
+            .task-card, .list-item, .goal-item, .routine-item, .settings-section {
+                background-color: var(--color-surface); border: 1px solid var(--color-border);
+                border-radius: 12px; padding: 15px; margin-bottom: 15px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            }
+            .list-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;}
+            .item-actions {
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-end;
+            }
+            .item-actions button {
+                width: 110px; /* Give buttons a consistent width */
+                margin: 4px 0; /* Add vertical spacing */
+            }
+
+            .goal-item, .routine-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+            .goal-item { display: grid; grid-template-columns: 1fr auto; }
+            .goal-item.current-focus { border-left: 4px solid var(--color-warning); background-color: var(--color-bored-bg); }
+            .editable-content-view .view-mode { background-color: var(--color-surface); padding:15px; border-radius:12px; min-height:100px; border:1px solid var(--color-border); }
+
+            #add-task-form { padding: 15px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 20px; }
+            #add-task-btn { font-size: 1.5em; padding: 0 10px; line-height: 1; }
+            .task-goal-tag { font-size: .8em; font-style: italic; color: var(--color-text-secondary); display: block; margin-top: 8px; }
+            .task-goal-tag a { text-decoration: none; color: var(--color-secondary); }
+            .task-goal-tag a:hover { text-decoration: underline; color: var(--color-link); }
+            .task-actions { justify-content: flex-end; }
+            .task-actions .btn-blitz { background-color: var(--color-warning); color: #1e293b; font-size: 1.1em; padding: 3px 8px; }
+            .task-help-suggestion { background-color: var(--color-primary-light); color: var(--color-text); border: 1px solid var(--color-primary); border-radius: 8px; padding: 8px; margin-top: 8px;}
+            .copy-button { background-color: var(--color-secondary); }
+
+            #blocked-view .summary { background-color: #3498db; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; color: #dbeafe; }
+            #stressed-view .quote-box { background-color: var(--color-stressed-bg); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
+            #stressed-view .option-btn { background-color: var(--color-secondary); color: var(--color-button-text); padding: 1rem; text-align: center; }
+            #bored-view #customActionArea { padding: 15px; background-color: var(--color-bored-bg); border-radius: 8px; margin-top: 20px; border: 1px solid var(--color-warning); }
+
+            #modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;justify-content:center;align-items:center;padding:10px;background-color:rgba(15,23,42,0.1);backdrop-filter:blur(4px);transition:background-color .3s ease,backdrop-filter .3s ease}
+            #modal-overlay.hidden{background-color:rgba(15,23,42,0);backdrop-filter:blur(0px);pointer-events:none}
+            #modal-content{max-width:90%;width:500px;border-radius:16px;padding:20px;position:relative;z-index:2;background-color:var(--color-modal-glass-bg);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px 0 rgba(0,0,0,0.1)}
+            #modal-content::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;overflow:hidden;-webkit-backdrop-filter:blur(24px) brightness(.9);backdrop-filter:blur(24px) brightness(.9);}
+            #modal-content > *{position:relative;z-index:1}
+            #modal-overlay.hidden #modal-content{display:none}
+            .hidden{display:none!important}
+            .modal-actions{margin-top:20px;text-align:right}
+            .modal-content {background-color: var(--color-modal-bg);}
+
+            #toast-notification{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background-color:rgba(20,20,20,.85);color:#fff;padding:10px 20px;border-radius:8px;z-index:2000;font-size:.9em;opacity:0;transition:opacity .5s ease;pointer-events:none;box-shadow:0 4px 15px rgba(0,0,0,.2)}
+            #toast-notification.show{opacity:1}
+
+            .ai-suggestion-list { list-style-type: none; padding: 0; margin: 15px 0; }
+            .ai-suggestion-list li { margin-bottom: 10px; }
+            .ai-suggestion-list label { display: flex; align-items: center; padding: 10px; background-color: rgba(255, 255, 255, 0.5); border-radius: 8px; cursor: pointer; border: 1px solid transparent; transition: background-color 0.2s ease, border-color 0.2s ease; }
+            body.dark-theme .ai-suggestion-list label { background-color: rgba(0, 0, 0, 0.2); }
+            .ai-suggestion-list label:hover { background-color: rgba(255, 255, 255, 0.8); border-color: var(--color-primary); }
+            body.dark-theme .ai-suggestion-list label:hover { background-color: rgba(0, 0, 0, 0.4); }
+            .ai-suggestion-list input[type="checkbox"] { margin-right: 12px; width: auto; transform: scale(1.2); }
+
+            #theme-toggle { position: absolute; top: 6px; right: 6px; z-index: 101; } /* FIX: Adjusted position */
+            .back-button { z-index: 110; position: absolute; top: 6px; left: 6px; color: var(--color-text-secondary); } /* FIX: Position and color */
+
+            /* New Styles for Onboarding */
+            .onboarding-wrapper {
+                text-align: center;
+                margin-top: 20px;
+                padding: 15px;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                border: 1px dashed var(--color-border);
+            }
+            .onboarding-step-img {
+                max-width: 100%;
+                height: auto;
+                border: 1px solid var(--color-border);
+                border-radius: 8px;
+                margin: 10px 0;
+                background: #eee;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 150px;
+            }
+
+            @media (max-width:600px){
+                body{padding-left:5px;padding-right:5px}
+                #app-header,#app-footer{margin-left:-5px;margin-right:-5px;padding-left:10px;padding-right:10px}
+                h1{font-size:1.5em} h2{font-size:1.2em} h3{font-size:1.1em}
+                #app-footer{flex-direction:row; align-items: center;} /* FIX: Revert to row for better alignment */
+                #footer-links{flex-grow: 1; justify-content:space-around; display: flex;} /* FIX: Ensure links take up space */
+            }
+        </style>
+</head>
+<body>
+    <!-- HTML Structure -->
+    <header id="app-header">
+        <button id="back-to-main" class="back-button btn-icon hidden" title="Back to Main View">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </button>
+        <!-- START: New AI Insights Button -->
+        <button id="nav-ai-insights" class="btn-icon" title="AI Insights" style="position: absolute; top: 6px; left: 50px; z-index: 110;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                <path d="M5 3v4"></path>
+                <path d="M9 5H1"></path>
+            </svg>
+        </button>
+        <!-- END: New AI Insights Button -->
+        <button id="theme-toggle" class="btn-icon" title="Toggle Theme"></button>
+        <div id="header-top-row">
+            <button id="nav-blocked" class="btn btn-secondary">Blocked</button>
+            <button id="nav-bored" class="btn btn-secondary">Bored</button>
+            <button id="nav-stressed" class="btn btn-secondary">Stressed</button>
+        </div>
+        <div id="header-goal-row">
+            <span id="current-goal-display">Loading goal...</span>
+            <a href="#" id="see-all-goals-link">See all goals</a>
+        </div>
+        <div style="text-align: center; padding: 5px;">
+            <button id="ai-assist-btn" class="btn btn-primary" style="background-color: var(--color-warning); color: #1e293b;">
+                🎯 What should I focus on?
+            </button>
+        </div>
+    </header>
+
+    <main id="main-content-area">
+
+        <!-- === Main View (Pending Tasks) === -->
+        <div id="main-view" class="app-view active">
+            <section id="pending-tasks-section">
+                <div class="view-header">
+                    <h2>Pending Today</h2>
+                    <button id="add-task-btn" title="Add Task">+</button>
+                </div>
+                <div id="add-task-form" class="hidden">
+                     <input type="text" id="new-task-input" placeholder="What needs doing?">
+                     <div id="add-task-options">
+                         <label id="goal-tag-toggle"> <input type="checkbox" id="tag-with-goal-checkbox" disabled> Link to current goal? </label>
+                         <div id="add-task-buttons"> <button id="submit-add-task" class="btn btn-success">Add</button> <button id="auto-add-task" class="btn btn-secondary" title="Add a random suggestion">Auto-Add</button> <button id="cancel-add-task" class="btn btn-secondary">Cancel</button> </div>
+                     </div>
+                </div>
+                <div id="pending-tasks-list"></div>
+                <div id="routine-loader-area" class="routine-loader">
+                    <button id="load-routine-btn" class="btn btn-secondary">Load a Routine</button>
+                </div>
+                 <div id="empty-pending-message" class="hidden"> Clean plate! Enjoy... or add some tasks. </div>
+
+                 <!-- NEW: Onboarding Trigger -->
+                 <div id="onboarding-trigger-wrapper" class="onboarding-wrapper hidden">
+                    <p style="margin-bottom:10px; font-size: 0.9em; color: var(--color-text-secondary);">New here?</p>
+                    <button id="start-onboarding-btn" class="btn btn-primary">🚀 Learn how to use Guide</button>
+                 </div>
+            </section>
+        </div>
+
+        <!-- === Goals View === -->
+        <div id="goals-view" class="app-view">
+            <div class="view-header">
+                <h2>Goals</h2>
+                <button id="copy-goals-btn" class="btn copy-button">Copy All (MD)</button>
+            </div>
+            <button id="add-new-goal-btn" class="btn-success">Add New Goal</button>
+             <div id="add-goal-form" class="hidden" style="margin-top:15px; background-color: var(--color-surface); padding: 15px; border-radius: 5px;">
+                 <input type="text" id="new-goal-input" placeholder="Enter new goal description">
+                 <button id="submit-add-goal" class="btn btn-success">Save Goal</button> <button id="cancel-add-goal" class="btn btn-secondary">Cancel</button>
+             </div>
+            <div id="goals-list" style="margin-top: 20px;"> <p id="empty-goals-message" class="hidden">No goals defined yet.</p> </div>
+        </div>
+
+        <!-- === Done List View === -->
+        <div id="done-list-view" class="app-view">
+             <div class="view-header">
+                 <h2>Done List</h2>
+                 <button id="copy-done-btn" class="btn copy-button">Copy All (MD)</button>
+            </div>
+            <div class="filter-controls"> <label for="done-time-filter">Show:</label> <select id="done-time-filter"> <option value="all">All Time</option> <option value="7">Last 7 Days</option> <option value="30">Last 30 Days</option> </select> <label for="done-goal-filter" style="margin-left: 10px;">Goal:</label> <select id="done-goal-filter"> <option value="all">All Goals</option> </select> </div>
+            <div id="done-list"> <p id="empty-done-message" class="hidden">Nothing done yet!</p> </div>
+        </div>
+
+        <!-- === Task Bowl View === -->
+        <div id="task-bowl-view" class="app-view">
+            <div class="view-header">
+                 <h2>Task Bowl (Backlog)</h2>
+                 <div style="text-align: right;"> <!-- Wrapper for right-aligned buttons -->
+                    <div>
+                        <button id="add-task-to-bowl-btn" title="Add Task to Bowl" class="btn btn-primary" style="padding: 0 10px; font-size: 1.5em; line-height: 1; vertical-align: middle;">+</button>
+                        <button id="copy-bowl-btn" class="btn copy-button">Copy All (MD)</button>
+                    </div>
+                    <button id="goal-guide-btn" title="AI Guide for this Goal" class="btn btn-primary hidden" style="background-color: var(--color-warning); color: #1e293b; margin-top: 5px;">Guide Me</button>
+                 </div>
+             </div>
+
+             <div class="filter-controls">
+                <label for="bowl-goal-filter">Filter by Goal:</label>
+                <select id="bowl-goal-filter">
+                    <option value="all">All Goals</option>
+                </select>
+             </div>
+             <hr>
+             <div id="task-bowl-list"></div>
+             <p id="empty-task-bowl-message" class="hidden">Task Bowl is empty.</p>
+        </div>
+
+        <!-- === Routines View === -->
+        <div id="routines-view" class="app-view">
+            <div class="view-header">
+                <h2>Routines</h2>
+            </div>
+            <button id="add-new-routine-btn" class="btn-success">Add New Routine</button>
+            <div id="add-routine-form" class="hidden">
+                <input type="hidden" id="edit-routine-id">
+                <label for="new-routine-name">Routine Name:</label>
+                <input type="text" id="new-routine-name" placeholder="e.g., Morning Kickstart">
+                <label for="new-routine-tasks">Tasks (one per line):</label>
+                <textarea id="new-routine-tasks" placeholder="Make coffee&#10;Stretch for 5 minutes&#10;Review calendar"></textarea>
+                <button id="submit-add-routine" class="btn btn-success">Save Routine</button>
+                <button id="cancel-add-routine" class="btn btn-secondary">Cancel</button>
+            </div>
+            <div id="routines-list" style="margin-top: 20px;">
+                <p id="empty-routines-message" class="hidden">No routines defined yet. Add one to get started!</p>
+            </div>
+        </div>
+
+        <!-- === References View === -->
+        <div id="references-view" class="app-view editable-content-view">
+             <div class="view-header">
+                 <h2>References</h2>
+                 <button id="copy-refs-btn" class="btn copy-button">Copy (MD)</button>
+             </div>
+             <div class="view-mode"> <div id="references-content-display" class="markdown-content">Loading...</div> </div>
+             <div class="edit-mode"> <textarea id="references-content-edit"></textarea> </div>
+             <div class="editable-content-controls"> <button class="btn btn-edit">Edit</button> <button class="btn btn-save btn-success hidden">Save</button> <button class="btn btn-cancel btn-secondary hidden">Cancel</button> </div>
+        </div>
+
+        <!-- === Reminders View === -->
+        <div id="reminders-view" class="app-view editable-content-view">
+             <div class="view-header">
+                 <h2>Reminders</h2>
+                 <button id="copy-reminders-btn" class="btn copy-button">Copy (MD)</button>
+             </div>
+             <div class="view-mode"> <div id="reminders-content-display" class="markdown-content">Loading...</div> </div>
+             <div class="edit-mode"> <textarea id="reminders-content-edit"></textarea> </div>
+             <div class="editable-content-controls"> <button class="btn btn-edit">Edit</button> <button class="btn btn-save btn-success hidden">Save</button> <button class="btn btn-cancel btn-secondary hidden">Cancel</button> </div>
+        </div>
+
+        <!-- === Blocked View === -->
+        <div id="blocked-view" class="app-view">
+             <header> <h1>Productivity Playbook</h1> <p>Your interactive guide to overcome blocks</p> </header>
+            <div class="summary"> <h2>Core Summary</h2> <p>Focus on small, actionable steps... </p> </div>
+             <div id="blocked-main-content">
+                 <div class="tip-display" id="tip-display"> <h2>Today's Productivity Tip</h2> <div id="random-tip-blocked">Loading tip...</div> </div>
+                 <div class="buttons"> <button id="unblock-btn">Help Me Get Unblocked</button> <button id="all-tips-btn-blocked">Show All Tips</button> <button id="new-tip-btn-blocked">Show Another Tip</button> </div>
+             </div>
+            <div class="unblock-form hidden" id="unblock-form-blocked">
+                <h2>Let's Get You Unblocked</h2> <p>What challenge are you facing today?</p>
+                <select id="block-selector"> <option value="">-- Select --</option> <option value="overwhelm">Overwhelmed</option> <option value="starting">Trouble starting</option> <option value="focus">Struggling focus</option> <option value="decision">Stuck decision</option> <option value="shipping">Can't ship</option> <option value="motivation">Lacking motivation</option> </select>
+                <div id="relevant-tips-blocked" class="relevant-tips hidden"></div> <button class="btn btn-secondary back-btn" data-target="blocked-main-content">Back</button>
+            </div>
+            <div class="all-tips hidden" id="all-tips-blocked">
+                <h2>Complete Playbook</h2> <div class="tip-section"><h3>Core Principles</h3><div id="core-principles-blocked"></div></div> <div class="tip-section"><h3>Action Framework</h3><div id="action-framework-blocked"></div></div> <div class="tip-section"><h3>Task Management</h3><div id="task-management-blocked"></div></div> <button class="btn btn-secondary back-btn" data-target="blocked-main-content">Back</button>
+            </div>
+        </div>
+
+        <!-- === Bored View === -->
+        <div id="bored-view" class="app-view">
+             <h1>Take a break.</h1> <button id="surpriseBtn">Surprise Me!</button> <button id="elseBtn" style="display:none;">Something Else</button>
+             <div id="suggestion"></div> <div id="timerDisplay"> <div id="timerText"></div> <div id="progressBarContainer"> <div id="progressBarFill"></div> </div> </div>
+             <div id="customActionArea"> <input type="text" id="customActionInput" placeholder="Enter your own quick task..."> <button id="addActionBtn" class="btn-success">Add Task for a Surprise Pick!</button> </div>
+        </div>
+
+        <!-- === Stressed View === -->
+        <div id="stressed-view" class="app-view">
+             <header> <h1>Stress-Coping Playbook</h1> <p>Interactive guide to help you navigate stress</p> </header>
+             <div class="mode-selector"> <button class="btn" id="random-mode-btn-stressed">Random Tip</button> <button class="btn" id="interactive-mode-btn-stressed">Interactive Guide</button> <button class="btn" id="all-tips-mode-btn-stressed">View All Tips</button> </div>
+             <div id="stressed-mode-content">
+                 <div id="random-mode-stressed" class="stressed-sub-view"> <div class="summary"><h2>Getting Unblocked</h2><p>Identify feelings...</p></div> <div class="quote-box" id="random-tip-stressed">Loading...</div> <div class="text-center"><button class="btn" id="new-random-tip-stressed">Get Another Tip</button></div> </div>
+                 <div id="interactive-mode-stressed" class="stressed-sub-view hidden">
+                     <div class="question-box" id="question-container-stressed"> <h2>How are you feeling?</h2> <div class="options"> <button class="option-btn" data-feeling="rudderless">Rudderless</button> <button class="option-btn" data-feeling="overwhelmed">Overwhelmed</button> <button class="option-btn" data-feeling="cluttered">Cluttered</button> <button class="option-btn" data-feeling="control">Lacking Control</button> <button class="option-btn" data-feeling="uncertain">Uncertain</button> </div> </div>
+                     <div class="tips-container hidden" id="tips-result-stressed"> <h3 id="feeling-title-stressed">Tips for <span id="feeling-type-stressed"></span></h3> <div id="feeling-tips-stressed"></div> <button class="btn" id="back-to-feelings-stressed">Try Different</button> </div>
+                 </div>
+                 <div id="all-tips-mode-stressed" class="stressed-sub-view hidden">
+                     <h2>Complete Playbook</h2> <div class="tip-category"><h3>Rudderless</h3><ul id="all-rudderless"></ul></div> <div class="tip-category"><h3>Overwhelmed</h3><ul id="all-overwhelmed"></ul></div> <div class="tip-category"><h3>Cluttered</h3><ul id="all-cluttered"></ul></div> <div class="tip-category"><h3>Lacking Control</h3><ul id="all-control"></ul></div> <div class="tip-category"><h3>Uncertain</h3><ul id="all-uncertain"></ul></div> <div class="tip-category"><h3>Generic</h3><ul id="all-generic"></ul></div>
+                 </div>
+              </div>
+        </div>
+
+        <!-- === Settings View === -->
+        <div id="settings-view" class="app-view">
+            <div class="view-header" style="align-items: center;">
+                <h2>Settings</h2>
+                <button id="settings-onboarding-btn" class="btn btn-primary" style="margin: 0;">🚀 Learn how to use Guide</button>
+            </div>
+
+            <section class="settings-section">
+                <h3>Backup & Restore</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">Save all your tasks, goals, notes, and custom playbooks to a single file. You can restore from this file on any device.</p>
+                <div class="settings-actions">
+                    <button id="export-full-backup-btn" class="btn btn-success">Export Full Backup</button>
+                    <button id="edit-full-backup-btn" class="btn">View / Edit Backup</button>
+                    <!-- NEW: A real button for import -->
+                    <button id="import-backup-btn" class="btn btn-danger">Import from Backup...</button>
+                    <!-- The original file input is now hidden -->
+                    <input type="file" id="import-full-backup-input" accept=".json" style="display: none;">
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>AI Provider Settings</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">Choose your preferred AI provider and enter the corresponding API key. The selected provider will be used for all AI features.</p>
+                <label for="ai-provider-select">Active AI Provider:</label>
+                <select id="ai-provider-select">
+                    <option value="gemini">Google Gemini</option>
+                    <option value="openai">OpenAI</option>
+                    <option value="claude">Anthropic Claude</option>
+                    <option value="deepseek">DeepSeek</option>
+                </select>
+
+                <label for="gemini-key-input">Google Gemini API Key:</label>
+                <input type="password" id="gemini-key-input" placeholder="Enter Gemini Key">
+
+                <label for="openai-key-input">OpenAI API Key:</label>
+                <input type="password" id="openai-key-input" placeholder="Enter OpenAI Key (e.g., sk-...)">
+
+                <label for="claude-key-input">Anthropic Claude API Key:</label>
+                <input type="password" id="claude-key-input" placeholder="Enter Claude Key (e.g., sk-ant-...)">
+
+                <label for="deepseek-key-input">DeepSeek API Key:</label>
+                <input type="password" id="deepseek-key-input" placeholder="Enter DeepSeek Key (e.g., ds-...)">
+
+                <div class="settings-actions">
+                    <button id="save-ai-settings-btn" class="btn btn-success">Save AI Settings</button>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Blocked Playbook Data</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">Customize the tips shown in the "Blocked" view.</p>
+                <div class="settings-actions">
+                     <button id="edit-blocked-data-btn" class="btn">View / Edit Data</button>
+                     <button id="export-blocked-data-btn" class="btn btn-secondary">Export to JSON</button>
+                     <button id="import-blocked-data-btn" class="btn btn-secondary">Import from JSON...</button>
+                     <input type="file" id="import-blocked-data-input" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Stressed Playbook Data</h3>
+                 <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">Customize the tips and quotes shown in the "Stressed" view.</p>
+                 <div class="settings-actions">
+                     <button id="edit-stressed-data-btn" class="btn">View / Edit Data</button>
+                     <button id="export-stressed-data-btn" class="btn btn-secondary">Export to JSON</button>
+                     <button id="import-stressed-data-btn" class="btn btn-secondary">Import from JSON...</button>
+                     <input type="file" id="import-stressed-data-input" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Bored Actions Data</h3>
+                 <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">Customize the suggestions for the "Bored" view.</p>
+                 <div class="settings-actions">
+                     <button id="edit-bored-data-btn" class="btn">View / Edit Data</button>
+                     <button id="export-bored-data-btn" class="btn btn-secondary">Export to JSON</button>
+                      <button id="import-bored-data-btn" class="btn btn-secondary">Import from JSON...</button>
+                      <input type="file" id="import-bored-data-input" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3 style="color: var(--color-danger);">Danger Zone</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">This action is irreversible. It will delete all your tasks, goals, notes, routines, and custom playbook settings from this browser.</p>
+                <div class="settings-actions">
+                    <button id="reset-app-btn" class="btn btn-danger">Reset All Application Data</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- === AI Insights View === -->
+        <div id="ai-insights-view" class="app-view">
+            <div class="view-header">
+                <h2>AI Insights</h2>
+            </div>
+
+            <!-- 1. Summarization Section -->
+            <section class="settings-section">
+                <h3>Activity Summary</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">
+                    Get an AI-powered summary of your completed tasks over a specific period.
+                </p>
+                <div class="settings-actions" style="display: flex; align-items: center; gap: 10px;">
+                    <label for="summary-weeks-input">Summarize last</label>
+                    <input type="number" id="summary-weeks-input" value="1" min="1" max="52" style="width: 60px; margin-bottom: 0;">
+                    <label for="summary-weeks-input">week(s).</label>
+                    <button id="generate-summary-btn" class="btn btn-primary">Generate</button>
+                </div>
+                <div id="summary-result-div" class="task-help-suggestion" style="margin-top: 15px; display: none;"></div>
+            </section>
+
+            <!-- 2. Fallen Through Items Section -->
+            <section class="settings-section">
+                <h3>Identify Forgotten Tasks</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">
+                    Let AI analyze your goals and backlog to find important tasks that might have fallen through the cracks.
+                </p>
+                <div class="settings-actions">
+                    <button id="analyze-fallen-btn" class="btn btn-primary">Analyze Now</button>
+                </div>
+                <div id="fallen-result-div" class="task-help-suggestion" style="margin-top: 15px; display: none;"></div>
+            </section>
+
+            <!-- 3. General Q&A Section -->
+            <section class="settings-section">
+                <h3>Ask a Question</h3>
+                <p style="font-size:0.9em; color:var(--color-text-secondary); margin-bottom:15px;">
+                    Ask anything about your productivity, goals, or tasks. The AI will answer based on your complete application data.
+                </p>
+                <textarea id="ai-question-input" placeholder="e.g., Which goal has the most overdue tasks? or What themes are emerging in my completed work?"></textarea>
+                <div class="settings-actions">
+                    <button id="submit-ai-question-btn" class="btn btn-success">Ask AI</button>
+                </div>
+                <div id="ai-question-result-div" class="task-help-suggestion" style="margin-top: 15px; display: none;"></div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer id="app-footer">
+        <div id="footer-links">
+            <button id="nav-done" class="btn btn-link">Done List</button>
+            <button id="nav-bowl" class="btn btn-link">Task Bowl</button>
+            <button id="nav-routines" class="btn btn-link">Routines</button>
+            <button id="nav-refs" class="btn btn-link">References</button>
+            <button id="nav-reminders" class="btn btn-link">Reminders</button>
+            <button id="nav-settings" class="btn-icon" title="Settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+        </div>
+    </footer>
+
+    <div id="modal-overlay" class="hidden">
+        <div class="modal-content">
+            <h3 id="modal-title">Confirmation</h3>
+            <div id="modal-body"></div>
+            <div class="modal-actions">
+                <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="modal-confirm-btn" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-notification"></div>
+
+
+    <script>
+        // --- Main Application Script ---
+        (function() {
+            // --- Constants ---
+            const MAX_PENDING_TASKS = 3;
+            let GEMINI_API_KEY = 'YOUR_API_KEY_HERE';
+            const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=`;
+            const LS_PREFIX = 'guideApp_';
+            const LS_KEYS = {
+                pending: LS_PREFIX + 'pendingTasks',
+                done: LS_PREFIX + 'doneTasks',
+                bowl: LS_PREFIX + 'taskBowl',
+                goals: LS_PREFIX + 'goals',
+                currentGoal: LS_PREFIX + 'currentGoal',
+                boredState: LS_PREFIX + 'boredState',
+                references: LS_PREFIX + 'referencesContent',
+                reminders: LS_PREFIX + 'remindersContent',
+                geminiApiKey: LS_PREFIX + 'geminiApiKey',
+                routines: LS_PREFIX + 'routines',
+                lastOpenedDate: LS_PREFIX + 'lastOpenedDate',
+                blockedTips: LS_PREFIX + 'blockedTips',
+                stressedTips: LS_PREFIX + 'stressedTips',
+                boredActions: LS_PREFIX + 'boredActions',
+                theme: LS_PREFIX + 'theme',
+                aiSettings: LS_PREFIX + 'aiSettings'
+            };
+            // --- EMBEDDED DEMO DATA ---
+            const DEMO_DATA = {
+                "version": "2.0-backup",
+                "exportedAt": new Date().toISOString(),
+                "data": {
+                    "pendingTasks": [
+                        {
+                            "id": "demo_t1",
+                            "text": "1. Set a Focus Goal.<br/><i>HOW: Click <b>'See all goals'</b> (top), then <b>'Set Focus'</b> on 'Learn Guide'. Pick a date.</i>",
+                            "createdAt": new Date(Date.now() - 16000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_t2",
+                            "text": "2. Mark tasks as Done.<br/><i>HOW: Click <b>'Done'</b> on Task 1. Enter a short comment (5+ chars). Do the same for this task.</i>",
+                            "createdAt": new Date(Date.now() - 15000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_t3",
+                            "text": "3. Move tasks from Bowl to Today.<br/><i>HOW: Click <b>'Task Bowl'</b> (bottom). Click <b>'Add to Today'</b> on tasks 4 & 5. Then mark this Done.</i>",
+                            "createdAt": new Date(Date.now() - 14000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        }
+                    ],
+                    "taskBowl": [
+                        {
+                            "id": "demo_b16",
+                            "text": "16. You're ready! Guide is local & private.<br/><i>Feedback? Star us on <a href='https://github.com/nextfiveinc/guide'>GitHub</a> or email [account]+guide@gmail.com.</i>",
+                            "createdAt": new Date().toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b15",
+                            "text": "15. Enable AI features (optional).<br/><i>HOW: Go to <b>Settings</b>. Enter your API Key under 'AI Provider Settings' and click <b>'Save'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 2000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b14",
+                            "text": "14. Backup your data.<br/><i>HOW: Go to <b>Settings</b> (bottom right). Click <b>'Export Full Backup'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 3000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b13",
+                            "text": "13. Manage stress.<br/><i>HOW: Click <b>'Stressed'</b> (top right). Try the <b>'Interactive Guide'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 4000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b12",
+                            "text": "12. Get unblocked.<br/><i>HOW: Click <b>'Blocked'</b> (top left). Use <b>'Help Me Get Unblocked'</b> for strategies.</i>",
+                            "createdAt": new Date(Date.now() - 5000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b11",
+                            "text": "11. Store Reminders.<br/><i>HOW: Click <b>'Reminders'</b> (bottom right) to view or edit.</i>",
+                            "createdAt": new Date(Date.now() - 6000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b10",
+                            "text": "10. Store References (notes).<br/><i>HOW: Click <b>'References'</b> (bottom center) to view or edit.</i>",
+                            "createdAt": new Date(Date.now() - 7000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b9",
+                            "text": "9. Use Routines for recurring lists.<br/><i>HOW: Click <b>'Routines'</b> (bottom). <b>'Edit'</b> 'Morning Kickstart', add a task, then <b>'Load'</b> it.</i>",
+                            "createdAt": new Date(Date.now() - 8000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b8",
+                            "text": "8. Auto-Add a small task for momentum.<br/><i>HOW: Click <b>+</b> (in Pending or Bowl), then click <b>'Auto-Add'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 9000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b7",
+                            "text": "7. Create a new task.<br/><i>HOW: Click <b>+</b> (in Pending or Bowl). Type a task and click <b>'Add'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 10000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b6",
+                            "text": "6. Take a break.<br/><i>HOW: Click <b>'Bored'</b> (top center). Click <b>'Surprise Me!'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 11000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b5",
+                            "text": "5. Review completed work.<br/><i>HOW: Click <b>'Done List'</b> (bottom left). Check your progress.</i>",
+                            "createdAt": new Date(Date.now() - 12000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        },
+                        {
+                            "id": "demo_b4",
+                            "text": "4. Set a new Goal.<br/><i>HOW: Click <b>'See all goals'</b> (top header). Click <b>'Add New Goal'</b>.</i>",
+                            "createdAt": new Date(Date.now() - 13000).toISOString(),
+                            "goalId": "demo_g1",
+                            "aiHelpText": null
+                        }
+                    ],
+                    "goals": [
+                        { "id": "demo_g1", "text": "Learn Guide (The App)", "createdAt": new Date().toISOString(), "endDate": null }
+                    ],
+                    "doneTasks": [],
+                    "currentGoal": null,
+                    "boredState": null,
+                    "referencesContent": "These are similar to reminders but you can use them to keep some handy details. I am using them to keep track of few notes files I want to review every week or so. Use it your way. \n\nClick the **Edit** button below to get started. \n\n---\n\n# NOTE\n- Basic **Markdown** _formatting_ supported.",
+                    "remindersContent": "Reminders to self keep you on track. Guide helps you keep them handy. Use them your way. \n\n_Say, a reminder to what did you really wanted to focus on this year._\n\nClick the **Edit** button below to get started. \n\n---\n\n# NOTE\n- Basic **Markdown** _formatting_ supported.",
+                    "routines": [
+                        { "id": "demo_r1", "name": "Morning Kickstart", "tasks": ["Go for a run", "Coffee & Daily posts", "<ADD-YOUR-NEXT-TASK-HERE>"] }
+                    ],
+                    // We can inherit the defaultBlockedTips and defaultStressedTips from the app logic if they are missing here,
+                    // but keeping specific ones ensures consistency.
+                    "blockedTips": [
+                         { "text": "Focus on the bigger picture", "category": "Mindset", "section": "Core Principles", "issues": ["overwhelm", "focus"] },
+                         { "text": "Work best one thing at a time", "category": "Productivity Philosophy", "section": "Core Principles", "issues": ["overwhelm", "focus"] },
+                         { "text": "Break down into small steps", "category": "Getting Started", "section": "Action Framework", "issues": ["starting", "overwhelm"] }
+                    ]
+                }
+            };
+            // --- State Variables ---
+            let pendingTasks = [], doneTasks = [], taskBowl = [], goals = [], currentGoal = null,
+                routines = [], activeBlitzes = {}, blitzWorker = null,
+                boredModeState = {}, referencesContent = '', remindersContent = '', toastTimeout = null;
+
+            const ALARM_SOUND_URI = 'data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU' + Array(30).join('/////w==');
+
+            // --- DOM Elements ---
+            const views = document.querySelectorAll('.app-view');
+            const backButton = document.getElementById('back-to-main');
+            const currentGoalDisplay = document.getElementById('current-goal-display');
+            const seeAllGoalsLink = document.getElementById('see-all-goals-link');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const toastElement = document.getElementById('toast-notification');
+            const mainContentArea = document.getElementById('main-content-area');
+            let pendingTasksList, addTaskBtn, addTaskForm, newTaskInput, tagWithGoalCheckbox, submitAddTaskBtn, autoAddTaskBtn, cancelAddTaskBtn, emptyPendingMessage, goalsList, addNewGoalBtn, addGoalForm, newGoalInput, submitAddGoalBtn, cancelAddGoalBtn, emptyGoalsMessage, doneListContainer, doneTimeFilter, doneGoalFilter, emptyDoneMessage, taskBowlListContainer, emptyTaskBowlMessage, referencesView, remindersView, copyGoalsBtn, copyDoneBtn, copyBowlBtn, copyRefsBtn, copyRemindersBtn, resetAppBtn,
+                loadRoutineBtn, routinesView, routinesList, addNewRoutineBtn, addRoutineForm, newRoutineNameInput, newRoutineTasksInput, submitAddRoutineBtn, cancelAddRoutineBtn, emptyRoutinesMessage, editRoutineIdInput, routineLoaderArea, goalGuideBtn,
+                // NEW: Onboarding Elements
+                onboardingTriggerWrapper, startOnboardingBtn;
+
+                        // --- NEW: Function to create the Blitz Timer Web Worker ---
+            function createBlitzWorker() {
+                const workerCode = `
+                    let timers = {}; // Store active timers by taskId
+
+                    self.onmessage = function(e) {
+                        const { command, taskId } = e.data;
+
+                        if (command === 'start') {
+                            if (timers[taskId]) {
+                                clearInterval(timers[taskId].intervalId);
+                            }
+
+                            let remainingTime = 5 * 60; // 5 minutes
+                            timers[taskId] = {
+                                intervalId: setInterval(() => {
+                                    remainingTime--;
+                                    self.postMessage({ event: 'tick', taskId: taskId, time: remainingTime });
+
+                                    if (remainingTime <= 0) {
+                                        clearInterval(timers[taskId].intervalId);
+                                        delete timers[taskId];
+                                        self.postMessage({ event: 'done', taskId: taskId });
+                                    }
+                                }, 1000)
+                            };
+                        } else if (command === 'stop') {
+                            if (timers[taskId]) {
+                                clearInterval(timers[taskId].intervalId);
+                                delete timers[taskId];
+                            }
+                        }
+                    };
+                `;
+                const blob = new Blob([workerCode], { type: 'application/javascript' });
+                return new Worker(URL.createObjectURL(blob));
+            }
+
+             // --- LocalStorage Helpers ---
+             function loadFromLocalStorage(key, defaultValue = null) { try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : defaultValue; } catch (error) { console.error(`Error loading item "${key}" from localStorage:`, error); return defaultValue; } }
+             function saveToLocalStorage(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (error) { console.error(`Error saving item "${key}" to localStorage:`, error); showToast(`Error saving data. Storage might be full.`, 'error'); } }
+
+            // --- View Management ---
+            function showView(viewId) {
+                 views.forEach(view => view.classList.remove('active'));
+                 const targetView = document.getElementById(viewId);
+                 if (targetView) {
+                     targetView.classList.add('active');
+                     backButton.classList.toggle('hidden', viewId === 'main-view');
+                     mainContentArea.scrollTop = 0;
+                     if (viewId === 'bored-view') BoredMode.initDisplay(); else BoredMode.cleanup();
+                     if (viewId === 'stressed-view') StressedMode.initDisplay();
+                     if (viewId === 'blocked-view') BlockedMode.initDisplay();
+                     if (viewId === 'done-list-view') renderDoneList();
+                     if (viewId === 'goals-view') renderGoals();
+                     if (viewId === 'task-bowl-view') renderTaskBowl(true); // Tell it to apply the default
+                     if (viewId === 'settings-view') loadAiSettingsUI();
+                     if (viewId === 'routines-view') renderRoutines();
+                     if (viewId === 'references-view') setupEditableContentView(referencesView, LS_KEYS.references);
+                     if (viewId === 'reminders-view') setupEditableContentView(remindersView, LS_KEYS.reminders);
+                 } else { console.error("View not found:", viewId); showView('main-view'); }
+             }
+
+            // --- UI Helpers ---
+                     // --- NEW: Theme Toggle Logic ---
+            const ICONS = {
+                sun: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
+                moon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`
+            };
+
+            function applyTheme(theme) {
+                const themeToggleBtn = document.getElementById('theme-toggle');
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    themeToggleBtn.innerHTML = ICONS.sun;
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    themeToggleBtn.innerHTML = ICONS.moon;
+                }
+            }
+
+            function toggleTheme() {
+                const isDark = document.body.classList.contains('dark-theme');
+                const newTheme = isDark ? 'light' : 'dark';
+                applyTheme(newTheme);
+                saveToLocalStorage(LS_KEYS.theme, newTheme);
+            }
+
+             function showToast(message, type = 'info', duration = 3000) { toastElement.textContent = message; toastElement.className = `toast-${type}`; toastElement.classList.add('show'); if (toastTimeout) clearTimeout(toastTimeout); toastTimeout = setTimeout(() => { toastElement.classList.remove('show'); toastTimeout = null; }, duration); }
+
+             function showModal(title, bodyContent, confirmCallback, confirmText = 'Confirm', cancelText = 'Cancel') { modalTitle.textContent = title; if (typeof bodyContent === 'string') { modalBody.innerHTML = `<p>${bodyContent}</p>`; } else { modalBody.innerHTML = ''; modalBody.appendChild(bodyContent); } const confirmBtn = document.getElementById('modal-confirm-btn'); const cancelBtn = document.getElementById('modal-cancel-btn'); if (!confirmBtn || !cancelBtn) { console.error("Modal buttons not found!"); return; } confirmBtn.textContent = confirmText; cancelBtn.textContent = cancelText; confirmBtn.className = 'btn'; if (confirmText.toLowerCase() === 'delete' || confirmText.toLowerCase() === 'reset' || confirmText.toLowerCase().includes('overwrite')) { confirmBtn.classList.add('btn-danger'); } else if (confirmText.toLowerCase().includes('save') || confirmText.toLowerCase().includes('submit')) { confirmBtn.classList.add('btn-success'); } else { confirmBtn.classList.add('btn-primary'); } confirmBtn.onclick = () => { if (confirmCallback) confirmCallback(); modalOverlay.classList.add('hidden'); }; cancelBtn.onclick = () => modalOverlay.classList.add('hidden'); modalOverlay.classList.remove('hidden'); }
+
+             function promptForApiKey(provider) {
+                const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
+                const modalBodyDiv = document.createElement('div');
+                modalBodyDiv.innerHTML = `
+                    <p><strong>API Key Needed for ${providerName}</strong></p>
+                    <p><small>Please enter your API key below. It will be saved securely in your browser's local storage.</small></p>
+                    <label for="gemini-api-key-input">Enter ${providerName} API Key:</label>
+                    <input type="password" id="gemini-api-key-input" placeholder="Paste your key here" style="width: 100%;">`;
+
+                const apiKeyInput = modalBodyDiv.querySelector('#gemini-api-key-input');
+                const saveCallback = () => {
+                    const enteredKey = apiKeyInput.value.trim();
+                    if (enteredKey) {
+                        const settings = loadFromLocalStorage(LS_KEYS.aiSettings, { activeProvider: provider, keys: {} });
+                        settings.keys[provider] = enteredKey;
+                        saveToLocalStorage(LS_KEYS.aiSettings, settings);
+                        showToast(`${providerName} API Key saved! You can now retry the AI action.`, "success");
+                    }
+                };
+                showModal("API Key Required", modalBodyDiv, saveCallback, "Save Key");
+            }
+
+
+             function parseMarkdown(markdown) { if (!markdown) return ''; let html = markdown .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); html = html.replace(/^###### (.*$)/gm, '<h6>$1</h6>'); html = html.replace(/^##### (.*$)/gm, '<h5>$1</h5>'); html = html.replace(/^#### (.*$)/gm, '<h4>$1</h4>'); html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>'); html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>'); html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>'); html = html.replace(/^\s*(?:---|---|\*\*\*)\s*$/gm, '<hr>'); html = html.replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>'); html = html.replace(/<\/blockquote>\s*<blockquote>/g, '<br>'); html = html.replace(/^\s*[*+-]\s+(.*$)/gm, '<li>$1</li>'); html = html.replace(/(<li>.*<\/li>)/gms, (match) => `<ul>${match}</ul>`); html = html.replace(/<\/ul>\s*<ul>/g, ''); html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'); html = html.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>'); html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>'); html = html.replace(/\*([^\*]+)\*/g, '<em>$1</em>'); html = html.replace(/_([^_]+)_/g, '<em>$1</em>'); html = html.split('\n').map(line => line.trim()).reduce((acc, line) => { if (line === '') { if (acc.inParagraph) { acc.html += '</p>'; acc.inParagraph = false; } } else if (/^<\/?(ul|ol|li|h[1-6]|blockquote|hr)/.test(line)) { if (acc.inParagraph) { acc.html += '</p>'; acc.inParagraph = false; } acc.html += line + '\n'; } else { if (!acc.inParagraph) { acc.html += '<p>'; acc.inParagraph = true; } else { acc.html += '<br>'; } acc.html += line; } return acc; }, { html: '', inParagraph: false }).html; if (html.endsWith('<p>')) html = html.substring(0, html.length - 3); else if (html.endsWith('<br>')) html = html.substring(0, html.length - 4); return html.trim(); }
+
+            // --- Core Logic Helpers ---
+             function generateId() { return Date.now().toString(36) + Math.random().toString(36).substring(2, 7); }
+             function formatDate(dateString) { if (!dateString) return ''; try { const date = new Date(dateString); const day = String(date.getDate()).padStart(2, '0'); const month = String(date.getMonth() + 1).padStart(2, '0'); const year = date.getFullYear(); return `${day}/${month}/${year}`; } catch (e) { return dateString; } }
+             function getCurrentTimestamp() { return new Date().toISOString(); }
+             function getTodayDateString() { const today = new Date(); const year = today.getFullYear(); const month = String(today.getMonth() + 1).padStart(2, '0'); const day = String(today.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`; }
+             function truncate(str, maxLength) { if (!str) return ''; if (str.length <= maxLength) { return str; } return str.substring(0, maxLength) + '...'; }
+
+            // --- Goal & Task UI Updates ---
+             function updateCurrentGoalDisplay() { if (!tagWithGoalCheckbox || !currentGoalDisplay || !newTaskInput) { console.warn("updateCurrentGoalDisplay called before DOM elements ready."); return; } if (currentGoal && currentGoal.text) { const formattedEndDate = formatDate(currentGoal.endDate); currentGoalDisplay.innerHTML = `Current goal: <strong>${currentGoal.text}</strong>${formattedEndDate ? ` till ${formattedEndDate}` : ''}`; tagWithGoalCheckbox.disabled = false; tagWithGoalCheckbox.parentElement.style.opacity = 1; } else { currentGoalDisplay.innerHTML = `No current focus set. <a href="#" id="set-goal-link">Set one?</a>`; tagWithGoalCheckbox.disabled = true; tagWithGoalCheckbox.checked = false; tagWithGoalCheckbox.parentElement.style.opacity = 0.5; const setGoalLink = document.getElementById('set-goal-link'); if (setGoalLink) setGoalLink.onclick = (e) => { e.preventDefault(); showView('goals-view'); }; } updateAddTaskPlaceholder(); }
+             function updateAddTaskPlaceholder() { if (!newTaskInput) return; const placeholders = ["What needs a decision?", "What small step?", "Where stuck?", "Get off plate?", "Cancel/delegate?", "Commitment?", "Add details..."]; newTaskInput.placeholder = (currentGoal && currentGoal.text) ? `E.g. related to ${currentGoal.text}` : placeholders[Math.floor(Math.random() * placeholders.length)]; }
+
+            // --- NEW: Onboarding Logic ---
+            function checkIfFreshInstall() {
+                return pendingTasks.length === 0 &&
+                       doneTasks.length === 0 &&
+                       taskBowl.length === 0 &&
+                       goals.length === 0 &&
+                       routines.length === 0;
+            }
+
+            function showOnboardingModal() {
+                const modalBodyDiv = document.createElement('div');
+
+                modalBodyDiv.innerHTML = `
+                    <p style="margin-bottom: 20px;">
+                        Welcome to Guide! Since this is a fresh install, would you like to load some sample data?
+                    </p>
+                    <p style="margin-bottom: 20px; font-size: 0.9em; color: var(--color-text-secondary);">
+                        This will set up example Goals, Tasks, and Routines so you can see how the app works instantly.
+                    </p>
+
+                    <div style="text-align: center; margin: 30px 0;">
+                        <button id="load-demo-btn" class="btn btn-success" style="font-size: 1.1em; padding: 15px 30px; width: 100%;">
+                            ✨ Load Demo Data
+                        </button>
+                    </div>
+                `;
+
+                // Logic: Take the const object and load it into LocalStorage
+                const loadBtn = modalBodyDiv.querySelector('#load-demo-btn');
+                loadBtn.addEventListener('click', () => {
+                    // We reuse the logic from backup restoration, but we skip the file reader
+                    // and just use our object.
+                    const restoreDemoData = () => {
+                        try {
+                            // 1. Validate version (basic check)
+                            if (!DEMO_DATA.data || !DEMO_DATA.version.startsWith("2.0")) {
+                                throw new Error("Internal Demo Data is corrupted.");
+                            }
+
+                            // 2. Clear existing (though it should be empty if we are here)
+                            // and Load new data
+                            Object.entries(DEMO_DATA.data).forEach(([keyName, data]) => {
+                                const lsKey = LS_PREFIX + keyName;
+                                // Only import keys that strictly belong to our app
+                                if (Object.values(LS_KEYS).includes(lsKey)) {
+                                     saveToLocalStorage(lsKey, data);
+                                }
+                            });
+
+                            showToast('Demo data loaded! Reloading...', 'success');
+                            setTimeout(() => location.reload(), 1000);
+
+                        } catch (error) {
+                             showToast(`Error loading demo: ${error.message}`, 'error', 5000);
+                        }
+                    };
+
+                    // Ask for final confirmation (reusing existing modal system)
+                    // We hide the current onboarding modal by triggering a new one
+                    showModal(
+                        'Load Demo Data?',
+                        'This will fill your lists with example tasks. You can delete them later.',
+                        restoreDemoData,
+                        'Yes, Load it'
+                    );
+                });
+
+                showModal("Get Started", modalBodyDiv, null, "Close", " ");
+                const cancelBtn = document.getElementById('modal-cancel-btn');
+                if(cancelBtn) cancelBtn.style.display = 'none';
+            }
+
+            // --- Task Management (CRUD) ---
+             function renderPendingTasks() {
+                 pendingTasksList.innerHTML = '';
+                 const hasTasks = pendingTasks.length > 0;
+                 emptyPendingMessage.classList.toggle('hidden', hasTasks);
+                 routineLoaderArea.classList.toggle('hidden', hasTasks);
+
+                 // NEW: Check for Fresh Install State
+                 if (!hasTasks && checkIfFreshInstall()) {
+                     onboardingTriggerWrapper.classList.remove('hidden');
+                 } else {
+                     onboardingTriggerWrapper.classList.add('hidden');
+                 }
+
+                 pendingTasks.forEach(task => {
+                     const card = document.createElement('div'); card.className = 'task-card'; card.dataset.taskId = task.id;
+                     let goalText = '[Add Goal]'; if (task.goalId) { const linkedGoal = goals.find(g => g.id === task.goalId); if (linkedGoal) { goalText = truncate(linkedGoal.text, 40); } }
+                     const goalHTML = `<span class="task-goal-tag">Goal: <a href="#" class="edit-task-goal-link" data-task-id="${task.id}" data-list-name="pending">${goalText}</a></span>`;
+                     const helpHTML = task.aiHelpText ? `<div class="task-help-suggestion">${task.aiHelpText}</div>` : '';
+                     card.innerHTML = ` <div class="task-content"> <span class="task-text">${task.text}</span> ${goalHTML} ${helpHTML} </div> <div class="task-actions"> <button class="btn-done btn-success">Done</button> <button class="btn-blitz" title="Start a 5-min Blitz">⚡</button><button class="btn-move-to-bowl btn-move">To Bowl</button> <button class="btn-help">Help</button> <button class="btn-delete btn-danger">Delete</button> </div> `;
+                     card.querySelector('.btn-done').addEventListener('click', () => promptMarkDone(task.id)); card.querySelector('.btn-blitz').addEventListener('click', () => promptStartBlitz(task.id)); card.querySelector('.btn-move-to-bowl').addEventListener('click', () => moveTaskToBowl(task.id)); card.querySelector('.btn-help').addEventListener('click', () => getHelpForTask(task.id)); card.querySelector('.btn-delete').addEventListener('click', () => confirmDeleteTask(task.id, 'pending'));
+                     pendingTasksList.appendChild(card);
+                 });
+             }
+             function handleAddTask(forceToBowl = false) { const text = newTaskInput.value.trim(); if (!text) { showToast("Task description cannot be empty.", "warning"); return; } const newTask = { id: generateId(), text: text, createdAt: getCurrentTimestamp(), goalId: tagWithGoalCheckbox.checked && currentGoal ? currentGoal.id : null, aiHelpText: null }; if (!forceToBowl && pendingTasks.length < MAX_PENDING_TASKS) { pendingTasks.push(newTask); saveToLocalStorage(LS_KEYS.pending, pendingTasks); renderPendingTasks(); showToast("Task added to Pending Today.", "success"); } else { taskBowl.unshift(newTask); saveToLocalStorage(LS_KEYS.bowl, taskBowl); if (document.getElementById('task-bowl-view').classList.contains('active')) { renderTaskBowl(false); } showToast(forceToBowl ? "Task added to Bowl." : "Pending full. Task added to Bowl.", "info");} newTaskInput.value = ''; tagWithGoalCheckbox.checked = false; addTaskForm.classList.add('hidden'); document.getElementById('add-task-btn').classList.remove('hidden'); document.getElementById('add-task-to-bowl-btn').classList.remove('hidden'); updateAddTaskPlaceholder(); }
+             function addAutoTask(forceToBowl = false) { const templates = ["Close oldest browser tab.", "Finish 5-min task.", "Delete unused app/file.", "Send 1-sentence email.", "Decide dinner.", "Review schedule.", "Drink water.", "Stretch 60s.", "Write gratitude.", "Tidy workspace 3min."]; newTaskInput.value = templates[Math.floor(Math.random() * templates.length)]; tagWithGoalCheckbox.checked = false; handleAddTask(forceToBowl); }
+             function promptMarkDone(taskId, sourceList = 'pending') { const task = (sourceList === 'pending' ? pendingTasks : taskBowl).find(t => t.id === taskId); if (!task) return; const modalBodyDiv = document.createElement('div'); modalBodyDiv.innerHTML = `<p>Marking task as done: <strong>${task.text}</strong></p><label for="action-taken-input">Action taken: (min 5 chars)</label><textarea id="action-taken-input" rows="2" style="width: 100%; margin-top: 5px;"></textarea>`; const actionInput = modalBodyDiv.querySelector('#action-taken-input'); showModal('Mark Task Done', modalBodyDiv, () => { const actionText = actionInput.value.trim(); if (actionText.length < 5) { showToast("Min 5 chars for action.", "warning"); promptMarkDone(taskId, sourceList); return; } markTaskDone(taskId, actionText, sourceList); }, 'Submit Done'); setTimeout(() => actionInput.focus(), 50); }
+             function markTaskDone(taskId, actionText, sourceList) { if (sourceList === 'pending') stopAndCleanUpBlitz(taskId); let taskIndex, task, list, key; if (sourceList === 'pending') { list = pendingTasks; key = LS_KEYS.pending; } else { list = taskBowl; key = LS_KEYS.bowl; } taskIndex = list.findIndex(t => t.id === taskId); if (taskIndex > -1) { task = list.splice(taskIndex, 1)[0]; saveToLocalStorage(key, list); if (sourceList === 'pending') renderPendingTasks(); else if (document.getElementById('task-bowl-view').classList.contains('active')) renderTaskBowl(); const doneItem = { ...task, actionTaken: actionText, doneAt: getCurrentTimestamp() }; delete doneItem.aiHelpText; doneTasks.push(doneItem); doneTasks.sort((a, b) => new Date(b.doneAt) - new Date(a.doneAt)); saveToLocalStorage(LS_KEYS.done, doneTasks); showToast("Task marked as done.", "success"); if (document.getElementById('done-list-view').classList.contains('active')) renderDoneList(); } else { showToast("Task not found.", "error"); } }
+             function confirmDeleteTask(taskId, sourceList) { const taskText = (sourceList === 'pending' ? pendingTasks : taskBowl).find(t => t.id === taskId)?.text; showModal('Confirm Deletion', `Delete task: "${taskText || 'Unknown Task'}"?`, () => deleteTask(taskId, sourceList), 'Delete'); }
+             function deleteTask(taskId, sourceList) {if (sourceList === 'pending') stopAndCleanUpBlitz(taskId); let taskIndex = -1, list, key, renderFunc; if (sourceList === 'pending') { list = pendingTasks; key = LS_KEYS.pending; renderFunc = renderPendingTasks; } else { list = taskBowl; key = LS_KEYS.bowl; renderFunc = renderTaskBowl; } taskIndex = list.findIndex(t => t.id === taskId); if (taskIndex > -1) { list.splice(taskIndex, 1); saveToLocalStorage(key, list); showToast(`Task deleted from ${sourceList === 'pending' ? 'Pending' : 'Task Bowl'}.`, "info"); if (document.getElementById(sourceList === 'pending' ? 'main-view' : 'task-bowl-view').classList.contains('active')) { renderFunc(); } } else { showToast("Task not found.", "warning"); } }
+
+            async function getHelpForTask(taskId) {
+                const task = pendingTasks.find(t => t.id === taskId);
+                if (!task) return; // Silently fail if task not found (e.g., for API key prompt)
+
+                if (!navigator.onLine) { showToast("Offline. Cannot get AI help.", "warning"); return; }
+
+                const helpButton = pendingTasksList.querySelector(`.task-card[data-task-id="${taskId}"] .btn-help`);
+                if(helpButton) { helpButton.textContent = 'Thinking...'; helpButton.disabled = true; }
+
+                try {
+                    const context = task.goalId ? getGoalContext(task.goalId) : null;
+                    const mainPrompt = buildTaskHelpPrompt(context, task);
+                    const suggestion = await callAIProvider(mainPrompt); // <<< THE MAGIC HAPPENS HERE
+
+                    if (suggestion) {
+                        const taskIndex = pendingTasks.findIndex(t => t.id === taskId);
+                        if (taskIndex > -1) {
+                            pendingTasks[taskIndex].aiHelpText = `<strong>Next Step:</strong> ${suggestion}`;
+                            saveToLocalStorage(LS_KEYS.pending, pendingTasks);
+                            renderPendingTasks();
+                            showToast("AI suggestion added.", "success");
+                        }
+                    } else {
+                        throw new Error("AI returned an empty suggestion.");
+                    }
+                } catch (error) {
+                    console.error("getHelpForTask failed:", error);
+                    showToast(`AI Help failed: ${error.message}`, "error", 4000);
+                } finally {
+                    if(helpButton) { helpButton.textContent = 'Help'; helpButton.disabled = false; }
+                }
+            }
+
+             function moveTaskToBowl(taskId) { stopAndCleanUpBlitz(taskId); const taskIndex = pendingTasks.findIndex(t => t.id === taskId); if (taskIndex > -1) { const [task] = pendingTasks.splice(taskIndex, 1); taskBowl.push(task); taskBowl.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); saveToLocalStorage(LS_KEYS.pending, pendingTasks); saveToLocalStorage(LS_KEYS.bowl, taskBowl); renderPendingTasks(); if (document.getElementById('task-bowl-view').classList.contains('active')) { renderTaskBowl(); } showToast("Task moved to Task Bowl.", "info"); } else { showToast("Task not found in pending list.", "warning"); } }
+
+            // --- Goal Management (CRUD) ---
+             function renderGoals() { goalsList.innerHTML = ''; emptyGoalsMessage.classList.toggle('hidden', goals.length > 0); populateGoalFilters(); goals.forEach(goal => { const item = document.createElement('div'); item.className = 'goal-item'; item.dataset.goalId = goal.id; const isCurrent = currentGoal && currentGoal.id === goal.id; if (isCurrent) item.classList.add('current-focus'); const formattedEndDate = isCurrent && goal.endDate ? ` (Focus till: ${formatDate(goal.endDate)})` : ''; item.innerHTML = ` <div class="goal-info"><span class="goal-text">${goal.text}</span><span class="focus-details">${formattedEndDate}</span></div> <div class="goal-actions"> ${!isCurrent ? '<button class="btn-set-focus">Set Focus</button>' : '<button class="btn-edit-focus">Edit Focus</button>'} <button class="btn-delete-goal btn-danger">Delete</button> </div>`; item.querySelector('.btn-delete-goal').addEventListener('click', () => confirmDeleteGoal(goal.id)); const focusBtn = item.querySelector('.btn-set-focus'); if (focusBtn) focusBtn.addEventListener('click', () => promptSetGoalFocus(goal.id)); const editFocusBtn = item.querySelector('.btn-edit-focus'); if (editFocusBtn) editFocusBtn.addEventListener('click', () => promptSetGoalFocus(goal.id, true)); goalsList.appendChild(item); }); }
+             function handleAddGoal() { const text = newGoalInput.value.trim(); if (!text) { showToast("Goal description empty.", "warning"); return; } const newGoal = { id: generateId(), text: text, createdAt: getCurrentTimestamp(), endDate: null }; goals.push(newGoal); goals.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt)); saveToLocalStorage(LS_KEYS.goals, goals); renderGoals(); showToast("Goal added.", "success"); newGoalInput.value = ''; addGoalForm.classList.add('hidden'); addNewGoalBtn.classList.remove('hidden'); }
+             function confirmDeleteGoal(goalId) { const goal = goals.find(g => g.id === goalId); showModal('Confirm Goal Deletion', `Delete goal: "${goal?.text || 'Unknown'}"? Tasks linked will lose association.`, () => deleteGoal(goalId), 'Delete'); }
+             function deleteGoal(goalId) { const goalIndex = goals.findIndex(g => g.id === goalId); if (goalIndex > -1) { goals.splice(goalIndex, 1); pendingTasks.forEach(t => { if (t.goalId === goalId) t.goalId = null; }); doneTasks.forEach(t => { if (t.goalId === goalId) t.goalId = null; }); taskBowl.forEach(t => { if (t.goalId === goalId) t.goalId = null; }); if (currentGoal && currentGoal.id === goalId) { currentGoal = null; saveToLocalStorage(LS_KEYS.currentGoal, null); updateCurrentGoalDisplay(); } saveToLocalStorage(LS_KEYS.goals, goals); saveToLocalStorage(LS_KEYS.pending, pendingTasks); saveToLocalStorage(LS_KEYS.done, doneTasks); saveToLocalStorage(LS_KEYS.bowl, taskBowl); renderGoals(); renderPendingTasks(); showToast("Goal deleted.", "info"); } }
+             function promptSetGoalFocus(goalId, isEditing = false) { const goal = goals.find(g => g.id === goalId); if (!goal) return; const defaultEndDate = new Date(); defaultEndDate.setDate(defaultEndDate.getDate() + 21); const currentEndDate = isEditing && goal.endDate ? goal.endDate.substring(0, 10) : defaultEndDate.toISOString().substring(0, 10); const modalBodyDiv = document.createElement('div'); modalBodyDiv.innerHTML = `<p>Set focus on goal: <strong>${goal.text}</strong></p><label for="goal-end-date">Focus until:</label><input type="date" id="goal-end-date" value="${currentEndDate}" style="width: auto;">`; const dateInput = modalBodyDiv.querySelector('#goal-end-date'); showModal(isEditing ? 'Edit Goal Focus' : 'Set Goal Focus', modalBodyDiv, () => { const selectedDate = dateInput.value; if (!selectedDate) { showToast("Select end date.", "warning"); promptSetGoalFocus(goalId, isEditing); return; } const endDateISO = new Date(selectedDate + 'T00:00:00Z').toISOString(); setGoalFocus(goalId, endDateISO); }, isEditing ? 'Update Focus' : 'Set Focus'); }
+             function setGoalFocus(goalId, endDate) { const goalIndex = goals.findIndex(g => g.id === goalId); if (goalIndex === -1) return; goals[goalIndex].endDate = endDate; saveToLocalStorage(LS_KEYS.goals, goals); currentGoal = { id: goals[goalIndex].id, text: goals[goalIndex].text, endDate: endDate }; saveToLocalStorage(LS_KEYS.currentGoal, currentGoal); updateCurrentGoalDisplay(); renderGoals(); renderPendingTasks(); showToast(`Focus set on goal: ${goals[goalIndex].text}`, "success"); }
+
+            // --- Done List & Task Bowl Rendering ---
+             function renderDoneList() {
+                const filterValue = doneTimeFilter.value;
+                const goalFilterValue = doneGoalFilter.value;
+                let filteredList = [...doneTasks];
+                const now = Date.now();
+                if (filterValue === '7') filteredList = filteredList.filter(task => new Date(task.doneAt).getTime() >= (now - 7 * 24 * 60 * 60 * 1000));
+                else if (filterValue === '30') filteredList = filteredList.filter(task => new Date(task.doneAt).getTime() >= (now - 30 * 24 * 60 * 60 * 1000));
+                if (goalFilterValue !== 'all') {
+                    if (goalFilterValue === 'none') filteredList = filteredList.filter(task => !task.goalId);
+                    else filteredList = filteredList.filter(task => task.goalId === goalFilterValue);
+                }
+                doneListContainer.innerHTML = '';
+                emptyDoneMessage.classList.toggle('hidden', filteredList.length > 0);
+                filteredList.forEach(task => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    let goalText = '[Add Goal]';
+                    if (task.goalId) {
+                        const linkedGoal = goals.find(g => g.id === task.goalId);
+                        if(linkedGoal) goalText = truncate(linkedGoal.text, 40);
+                    }
+                    const goalHTML = `<div style="font-size:0.8em; color: var(--color-text-secondary);"><em>Goal: <a href="#" class="edit-task-goal-link" data-task-id="${task.id}" data-list-name="done">${goalText}</a></em></div>`;
+                    item.innerHTML = ` <div class="item-details"> <div class="task-text">${task.text}</div> ${goalHTML} <div class="action-text">Action: ${task.actionTaken}</div> <div class="timestamp">Done: ${formatDate(task.doneAt)}</div> </div>`;
+                    doneListContainer.appendChild(item);
+                });
+            }
+             function populateGoalFilters() {
+                const doneGoalFilter = document.getElementById('done-goal-filter');
+                const bowlGoalFilter = document.getElementById('bowl-goal-filter');
+                const filters = [doneGoalFilter, bowlGoalFilter];
+                filters.forEach(filterElement => {
+                    if (!filterElement) return;
+                    const currentValue = filterElement.value;
+                    filterElement.innerHTML = '<option value="all">All Goals</option><option value="none">No Goal</option>';
+                    goals.forEach(goal => {
+                        const option = document.createElement('option');
+                        option.value = goal.id;
+                        option.textContent = goal.text;
+                        filterElement.appendChild(option);
+                    });
+                    if (filterElement.querySelector(`option[value="${currentValue}"]`)) {
+                        filterElement.value = currentValue;
+                    }
+                });
+            }
+            function renderTaskBowl(applyDefault = false) {
+                const bowlGoalFilter = document.getElementById('bowl-goal-filter');
+                if (!bowlGoalFilter) return;
+                if (applyDefault && currentGoal) {
+                    if (bowlGoalFilter.querySelector(`option[value="${currentGoal.id}"]`)) {
+                        bowlGoalFilter.value = currentGoal.id;
+                    }
+                }
+                const goalFilterValue = bowlGoalFilter.value;
+                let filteredList = [...taskBowl];
+                if (goalFilterValue !== 'all') {
+                    if (goalFilterValue === 'none') {
+                        filteredList = filteredList.filter(task => !task.goalId);
+                    } else {
+                        filteredList = filteredList.filter(task => task.goalId === goalFilterValue);
+                    }
+                }
+                taskBowlListContainer.innerHTML = '';
+                emptyTaskBowlMessage.classList.toggle('hidden', filteredList.length > 0);
+                filteredList.forEach(task => {
+                     const item = document.createElement('div');
+                     item.className = 'list-item';
+                     item.dataset.taskId = task.id;
+                     let goalText = '[Add Goal]';
+                     if (task.goalId) {
+                        const linkedGoal = goals.find(g => g.id === task.goalId);
+                        if (linkedGoal) goalText = truncate(linkedGoal.text, 40);
+                     }
+                     const goalHTML = `<div style="font-size:0.8em; color: var(--color-text-secondary);"><em>Goal: <a href="#" class="edit-task-goal-link" data-task-id="${task.id}" data-list-name="bowl">${goalText}</a></em></div>`;
+                     const helpHTML = task.aiHelpText ? `<div class="task-help-suggestion" style="margin-top: 5px; font-size: 0.85em; padding: 5px;">${task.aiHelpText}</div>` : '';
+                     item.innerHTML = ` <div class="item-details"> <div class="task-text">${task.text}</div> ${goalHTML} ${helpHTML} <div class="timestamp">Added: ${formatDate(task.createdAt)}</div> </div> <div class="item-actions"> <button class="btn-add-to-today">Add to Today</button> <button class="btn-bowl-done btn-success">Done</button> <button class="btn-bowl-delete btn-danger">Delete</button> </div> `;
+                     item.querySelector('.btn-add-to-today').addEventListener('click', () => moveTaskToToday(task.id));
+                     item.querySelector('.btn-bowl-done').addEventListener('click', () => promptMarkDone(task.id, 'bowl'));
+                     item.querySelector('.btn-bowl-delete').addEventListener('click', () => confirmDeleteTask(task.id, 'bowl'));
+                     taskBowlListContainer.appendChild(item);
+                });
+                updateGuideButtonVisibility(); // Update button visibility after rendering
+             }
+             function moveTaskToToday(taskId) { if (pendingTasks.length >= MAX_PENDING_TASKS) { showToast(`Cannot add: Pending list full (${MAX_PENDING_TASKS} max).`, "warning"); return; } const taskIndex = taskBowl.findIndex(t => t.id === taskId); if (taskIndex > -1) { const [task] = taskBowl.splice(taskIndex, 1); pendingTasks.push(task); saveToLocalStorage(LS_KEYS.bowl, taskBowl); saveToLocalStorage(LS_KEYS.pending, pendingTasks); renderTaskBowl(); renderPendingTasks(); showToast("Task moved to Pending Today.", "success"); } }
+
+            // --- Goal Linking for Tasks ---
+            function promptEditTaskGoal(taskId, listName) {
+                let task, list;
+                switch(listName) {
+                    case 'pending': list = pendingTasks; break;
+                    case 'bowl': list = taskBowl; break;
+                    case 'done': list = doneTasks; break;
+                    default: showToast('Error: Unknown list.', 'error'); return;
+                }
+                task = list.find(t => t.id === taskId);
+                if (!task) { showToast('Error: Task not found.', 'error'); return; }
+
+                const modalBodyDiv = document.createElement('div');
+                let optionsHTML = '<option value="none">-- No Goal --</option>';
+                goals.forEach(g => {
+                    optionsHTML += `<option value="${g.id}" ${task.goalId === g.id ? 'selected' : ''}>${g.text}</option>`;
+                });
+
+                modalBodyDiv.innerHTML = `
+                    <p>Editing goal for: <strong>${truncate(task.text, 100)}</strong></p>
+                    <label for="goal-select-modal">Select Goal:</label>
+                    <select id="goal-select-modal">${optionsHTML}</select>`;
+
+                const saveCallback = () => {
+                    const select = modalBodyDiv.querySelector('#goal-select-modal');
+                    const newGoalId = select.value === 'none' ? null : select.value;
+                    task.goalId = newGoalId;
+                    saveToLocalStorage(LS_KEYS[listName], list);
+                    showToast('Goal updated!', 'success');
+
+                    switch(listName) {
+                        case 'pending': renderPendingTasks(); break;
+                        case 'bowl': renderTaskBowl(false); break;
+                        case 'done': renderDoneList(); break;
+                    }
+                };
+                showModal('Edit Task Goal', modalBodyDiv, saveCallback, 'Save Goal');
+            }
+
+            // --- AI Helper Functions ---
+
+                        // --- NEW: AI Provider Abstraction Layer ---
+
+            async function callGemini(prompt, apiKey) {
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+                const body = { contents: [{ parts: [{ text: prompt }] }] };
+                const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                if (!response.ok) throw new Error(`Gemini API Error: ${response.status}`);
+                const result = await response.json();
+                return result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            }
+
+            async function callOpenAI(prompt, apiKey, endpoint, model) {
+                const body = { model: model, messages: [{ role: "user", content: prompt }] };
+                const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` };
+                const response = await fetch(endpoint, { method: 'POST', headers: headers, body: JSON.stringify(body) });
+                if (!response.ok) throw new Error(`OpenAI/DeepSeek API Error: ${response.status}`);
+                const result = await response.json();
+                return result?.choices?.[0]?.message?.content?.trim();
+            }
+
+            async function callClaude(prompt, apiKey) {
+                const endpoint = 'https://api.anthropic.com/v1/messages';
+                const headers = {  'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json',"anthropic-dangerous-direct-browser-access": "true", };
+                const body = { model: "claude-haiku-4-5", max_tokens: 16384, messages: [{ role: "user", content: prompt }] };
+
+                try {
+                    const response = await fetch(endpoint, { method: 'POST', headers: headers, body: JSON.stringify(body) });
+
+                    if (!response.ok) {const errorText = await response.text();
+                        console.error('API Error:', response.status, errorText);
+                        throw new Error(`Claude API Error: ${response.status} - ${errorText}`);
+                    }
+
+                    const result = await response.json();
+                    return result?.content?.[0]?.text?.trim();
+                } catch (error) {
+                    console.error('Network error:', error);
+                    throw error;
+                }
+            }
+
+            async function callAIProvider(prompt) {
+                const aiSettings = loadFromLocalStorage(LS_KEYS.aiSettings, { activeProvider: 'gemini', keys: {} });
+                const provider = aiSettings.activeProvider;
+                const apiKey = aiSettings.keys[provider];
+
+                if (!apiKey) {
+                    promptForApiKey(provider);
+                    throw new Error(`API Key for ${provider} is missing.`);
+                }
+
+                switch (provider) {
+                    case 'gemini':
+                        return await callGemini(prompt, apiKey);
+                    case 'openai':
+                        return await callOpenAI(prompt, apiKey, 'https://api.openai.com/v1/chat/completions', 'gpt-4-turbo');
+                    case 'deepseek':
+                        return await callOpenAI(prompt, apiKey, 'https://api.deepseek.com/chat/completions', 'deepseek-chat');
+                    case 'claude':
+                        return await callClaude(prompt, apiKey);
+                    default:
+                        throw new Error(`Unknown AI provider: ${provider}`);
+                }
+            }
+
+            function getGoalContext(goalId) {
+                const goal = goals.find(g => g.id === goalId);
+                if (!goal) return null;
+
+                return {
+                    goal: goal,
+                    done: doneTasks.filter(t => t.goalId === goalId),
+                    pending: pendingTasks.filter(t => t.goalId === goalId),
+                    bowl: taskBowl.filter(t => t.goalId === goalId)
+                };
+            }
+
+            function buildTaskHelpPrompt(context, task) {
+                if (!context) {
+                    return `Task: "${task.text}"\n\nEvaluate task broadness (target <3hr). If broad, reframe for action. Suggest absolute next logical step (doable <=30min, minimal prerequisites). Something that'll give early, quick, meaningful wins for momentum.  ONLY suggested step concisely.`;
+                }
+
+                const doneList = context.done.length > 0 ? context.done.map(t => `- Task: "${t.text}" (Action Taken: "${t.actionTaken}")`).join('\n') : '(None)';
+                const pendingList = context.pending.filter(t => t.id !== task.id).length > 0 ? context.pending.filter(t => t.id !== task.id).map(t => `- "${t.text}"`).join('\n') : '(None)';
+                const bowlList = context.bowl.length > 0 ? context.bowl.map(t => `- "${t.text}"`).join('\n') : '(None)';
+
+                return `You are an expert productivity assistant. Your job is to help me break down a task into a concrete, physical, and immediately actionable next step that takes less than 30 minutes.
+
+Here is the full context of the project I am working on:
+
+# OVERALL GOAL
+"${context.goal.text}"
+
+---
+
+## CONTEXT: PROJECT STATUS
+
+### Completed Steps:
+${doneList}
+
+### Other Pending Tasks:
+${pendingList}
+
+### Backlog Tasks (in the Task Bowl):
+${bowlList}
+
+---
+
+# TASK I NEED HELP WITH
+"${task.text}"
+
+Given all of the above context, what is the absolute next, single, physical action I should take to start making progress on THIS specific task? The suggestion must be a very small first step. Something that'll give early, quick and  meaningful win for momentum.`;
+            }
+
+            function buildGoalGuidePrompt(context) {
+                const doneList = context.done.length > 0 ? context.done.map(t => `- "${t.text}"`).join('\n') : '(None)';
+                const currentPlanTasks = [...context.pending, ...context.bowl];
+                const currentPlanList = currentPlanTasks.length > 0 ? currentPlanTasks.map(t => `- "${t.text}"`).join('\n') : '(None)';
+                const request = currentPlanTasks.length === 0
+                    ? "Based on the goal and progress so far, the user's plan is empty. Suggest the next 5 concrete, physical, and actionable tasks to get them started. Something that'll give early, quick, meaningful wins for momentum."
+                    : "Based on the goal, progress, and current plan, evaluate the plan. What are the next 2-3 small, actionable tasks that should be done next to maintain momentum or fill any gaps? Something that'll give early, quick, meaningful wins for momentum.";
+
+                return `You are an expert productivity coach. Your job is to help me break down a large goal into a series of concrete, physical, and immediately actionable first steps. Each step should take less than 30 minutes to complete to build momentum.
+
+# OVERALL GOAL
+"${context.goal.text}"
+
+## CURRENT PROGRESS (Completed Tasks)
+${doneList}
+
+## CURRENT PLAN (Existing Tasks in Pending/Backlog)
+${currentPlanList}
+
+---
+
+# MY REQUEST
+${request} Present the output as a simple, un-numbered list, with one task per line, and nothing else. For example:
+- First suggested task
+- Second suggested task`;
+            }
+
+            function updateGuideButtonVisibility() {
+                const bowlGoalFilter = document.getElementById('bowl-goal-filter');
+                if (!bowlGoalFilter || !goalGuideBtn) return;
+                const selectedGoal = bowlGoalFilter.value;
+                const isSpecificGoal = selectedGoal !== 'all' && selectedGoal !== 'none';
+                goalGuideBtn.classList.toggle('hidden', !isSpecificGoal);
+            }
+
+            async function startGoalGuide() {
+                const goalId = document.getElementById('bowl-goal-filter').value;
+                if (!goalId || goalId === 'all' || goalId === 'none') return;
+                if (!navigator.onLine) { showToast("Offline. Cannot get AI help.", "warning"); return; }
+
+                goalGuideBtn.textContent = 'Thinking...';
+                goalGuideBtn.disabled = true;
+
+                try {
+                    const context = getGoalContext(goalId);
+                    if (!context) throw new Error("Could not find goal context.");
+                    const prompt = buildGoalGuidePrompt(context);
+                    const suggestionText = await callAIProvider(prompt); // <<< THE MAGIC HAPPENS HERE
+
+                    if (suggestionText) {
+                        const suggestions = suggestionText.split('\n').map(s => s.replace(/^- /, '').trim()).filter(s => s);
+                        showGoalGuideModal(suggestions, goalId);
+                    } else {
+                        throw new Error("AI returned no suggestions.");
+                    }
+                } catch (error) {
+                    console.error("Goal Guide failed:", error);
+                    showToast(`Goal Guide failed: ${error.message}`, 'error', 4000);
+                } finally {
+                    goalGuideBtn.textContent = 'Guide Me';
+                    goalGuideBtn.disabled = false;
+                }
+            }
+
+            function showGoalGuideModal(suggestions, goalId) {
+                const modalBodyDiv = document.createElement('div');
+                const suggestionsHTML = suggestions.map((s, index) => `
+                    <li>
+                        <label for="suggestion-${index}">
+                            <input type="checkbox" id="suggestion-${index}" value="${s}" checked>
+                            <span>${s}</span>
+                        </label>
+                    </li>
+                `).join('');
+
+                modalBodyDiv.innerHTML = `
+                    <p>Here are some suggested next steps. Select which ones you'd like to add to your Task Bowl.</p>
+                    <ul class="ai-suggestion-list">${suggestionsHTML}</ul>
+                `;
+
+                // This function updates the confirm button text based on checkbox selections.
+                const updateConfirmButtonText = () => {
+                    const checkedCount = modalBodyDiv.querySelectorAll('input[type="checkbox"]:checked').length;
+                    const confirmBtn = document.getElementById('modal-confirm-btn');
+                    if (confirmBtn) {
+                        confirmBtn.textContent = `Add ${checkedCount} Selected to Bowl`;
+                        confirmBtn.disabled = checkedCount === 0;
+                    }
+                };
+
+                modalBodyDiv.addEventListener('change', updateConfirmButtonText);
+
+                const confirmCallback = () => {
+                    const checkboxes = modalBodyDiv.querySelectorAll('input[type="checkbox"]:checked');
+                    if (checkboxes.length > 0) {
+                        let tasksAddedCount = 0;
+                        checkboxes.forEach(cb => {
+                            const newTask = { id: generateId(), text: cb.value, createdAt: getCurrentTimestamp(), goalId: goalId, aiHelpText: null };
+                            taskBowl.unshift(newTask);
+                            tasksAddedCount++;
+                        });
+                        saveToLocalStorage(LS_KEYS.bowl, taskBowl);
+                        renderTaskBowl();
+                        showToast(`${tasksAddedCount} task${tasksAddedCount > 1 ? 's' : ''} added to Bowl.`, "success");
+                    }
+                };
+
+                showModal("AI-Suggested Tasks", modalBodyDiv, confirmCallback, `Add ${suggestions.length} Selected to Bowl`);
+                // Run once immediately to set the initial button state.
+                updateConfirmButtonText();
+            }
+
+             // --- Routines Functions ---
+            function renderRoutines() {
+                routinesList.innerHTML = ''; emptyRoutinesMessage.classList.toggle('hidden', routines.length > 0);
+                routines.forEach(routine => {
+                    const item = document.createElement('div'); item.className = 'routine-item'; item.dataset.routineId = routine.id; const taskCount = routine.tasks.length;
+                    item.innerHTML = ` <div class="routine-info"> <span class="routine-name">${routine.name}</span> <div class="routine-task-count">${taskCount} task${taskCount !== 1 ? 's' : ''}</div> </div> <div class="routine-actions"> <button class="btn-load-routine btn-success">Load</button> <button class="btn-edit-routine">Edit</button> <button class="btn-delete-routine btn-danger">Delete</button> </div>`;
+                    item.querySelector('.btn-load-routine').addEventListener('click', () => loadRoutine(routine.id)); item.querySelector('.btn-edit-routine').addEventListener('click', () => showEditRoutineForm(routine.id)); item.querySelector('.btn-delete-routine').addEventListener('click', () => confirmDeleteRoutine(routine.id));
+                    routinesList.appendChild(item);
+                });
+            }
+            function handleAddOrUpdateRoutine() {
+                const name = newRoutineNameInput.value.trim(); const tasksText = newRoutineTasksInput.value.trim(); const editingId = editRoutineIdInput.value;
+                if (!name || !tasksText) { showToast("Routine name and tasks cannot be empty.", "warning"); return; }
+                const tasks = tasksText.split('\n').map(t => t.trim()).filter(t => t);
+                if (tasks.length === 0) { showToast("Please enter at least one task.", "warning"); return; }
+                if (editingId) {
+                    const routineIndex = routines.findIndex(r => r.id === editingId);
+                    if (routineIndex > -1) { routines[routineIndex].name = name; routines[routineIndex].tasks = tasks; showToast("Routine updated.", "success"); }
+                } else { const newRoutine = { id: generateId(), name, tasks }; routines.push(newRoutine); showToast("Routine added.", "success"); }
+                saveToLocalStorage(LS_KEYS.routines, routines); renderRoutines(); addRoutineForm.classList.add('hidden'); addNewRoutineBtn.classList.remove('hidden');
+            }
+            function showEditRoutineForm(routineId) {
+                const routine = routines.find(r => r.id === routineId); if (!routine) return;
+                editRoutineIdInput.value = routine.id; newRoutineNameInput.value = routine.name; newRoutineTasksInput.value = routine.tasks.join('\n');
+                addRoutineForm.classList.remove('hidden'); addNewRoutineBtn.classList.add('hidden'); newRoutineNameInput.focus();
+            }
+            function confirmDeleteRoutine(routineId) { const routineName = routines.find(r => r.id === routineId)?.name; showModal('Confirm Deletion', `Delete the routine "${routineName || 'Unknown'}"?`, () => deleteRoutine(routineId), 'Delete'); }
+            function deleteRoutine(routineId) { routines = routines.filter(r => r.id !== routineId); saveToLocalStorage(LS_KEYS.routines, routines); renderRoutines(); showToast("Routine deleted.", "info"); }
+            function loadRoutine(routineId) {
+                const routine = routines.find(r => r.id === routineId); if (!routine) return;
+                let addedToPending = 0; let addedToBowl = 0;
+                routine.tasks.forEach(taskText => {
+                    const newTask = { id: generateId(), text: taskText, createdAt: getCurrentTimestamp(), goalId: null, aiHelpText: null };
+                    if (pendingTasks.length < MAX_PENDING_TASKS) { pendingTasks.push(newTask); addedToPending++; } else { taskBowl.push(newTask); addedToBowl++; }
+                });
+                if (addedToPending > 0) saveToLocalStorage(LS_KEYS.pending, pendingTasks); if (addedToBowl > 0) saveToLocalStorage(LS_KEYS.bowl, taskBowl);
+                renderPendingTasks();
+                let message = `Loaded ${addedToPending} task${addedToPending !== 1 ? 's' : ''} to Pending.`;
+                if (addedToBowl > 0) { message += ` ${addedToBowl} task${addedToBowl !== 1 ? 's' : ''} sent to Task Bowl.`; }
+                showToast(message, 'success', 4000); showView('main-view');
+            }
+
+             // --- Blitz Mode Functions ---
+            function promptStartBlitz(taskId) {
+                if (activeBlitzes[taskId]) { showToast("A blitz is already active for this task!", "warning"); return; }
+                const task = pendingTasks.find(t => t.id === taskId); if (!task) return;
+                showModal( "Start Blitz?", `Start a 5-minute blitz session for: <strong>${task.text}</strong>?`, () => startBlitz(taskId), "Start Blitz", "Not Now" );
+            }
+            function startBlitz(taskId) {
+                const card = pendingTasksList.querySelector(`.task-card[data-task-id="${taskId}"]`);
+                if (!card) return;
+
+                const alarm = new Audio(ALARM_SOUND_URI);
+                alarm.load();
+
+                activeBlitzes[taskId] = { alarm: alarm };
+
+                blitzWorker.postMessage({ command: 'start', taskId: taskId });
+
+                const taskContent = card.querySelector('.task-content');
+                const actionButtons = card.querySelectorAll('.task-actions button');
+                const timerDisplay = document.createElement('span');
+                timerDisplay.className = 'blitz-timer-display';
+                timerDisplay.textContent = '5:00';
+                taskContent.appendChild(timerDisplay);
+                actionButtons.forEach(btn => btn.disabled = true);
+            }
+
+            function handleBlitzTick(taskId, time) {
+                const card = pendingTasksList.querySelector(`.task-card[data-task-id="${taskId}"]`);
+                if (!card) return;
+                const timerDisplay = card.querySelector('.blitz-timer-display');
+                if (timerDisplay) {
+                    const minutes = Math.floor(time / 60);
+                    const seconds = time % 60;
+                    timerDisplay.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+                }
+            }
+
+            function handleBlitzDone(taskId) {
+                const card = pendingTasksList.querySelector(`.task-card[data-task-id="${taskId}"]`);
+                if (card) {
+                    const timerDisplay = card.querySelector('.blitz-timer-display');
+                    if (timerDisplay) timerDisplay.remove();
+                    const actionButtons = card.querySelectorAll('.task-actions button');
+                    actionButtons.forEach(btn => btn.disabled = false);
+                }
+
+                if (activeBlitzes[taskId]) {
+                    activeBlitzes[taskId].alarm.play();
+                    delete activeBlitzes[taskId];
+                }
+                showToast("Blitz complete! Great start.", "success");
+            }
+
+            function stopAndCleanUpBlitz(taskId) {
+                if (activeBlitzes[taskId]) {
+                    blitzWorker.postMessage({ command: 'stop', taskId: taskId });
+                    delete activeBlitzes[taskId];
+                }
+            }
+
+             // --- Editable Content ---
+             function setupEditableContentView(viewElement, storageKey) {
+                 if (!viewElement) return; const displayDiv = viewElement.querySelector('.view-mode .markdown-content'); const editArea = viewElement.querySelector('.edit-mode textarea'); const viewModeDiv = viewElement.querySelector('.view-mode'); const editModeDiv = viewElement.querySelector('.edit-mode'); const editBtn = viewElement.querySelector('.btn-edit'); const saveBtn = viewElement.querySelector('.btn-save'); const cancelBtn = viewElement.querySelector('.btn-cancel'); if (!displayDiv || !editArea || !viewModeDiv || !editModeDiv || !editBtn || !saveBtn || !cancelBtn) { console.error(`Editable content view setup failed: Elements missing in view with storageKey: ${storageKey}`); if(displayDiv) displayDiv.innerHTML = "<p><em>Error loading content area.</em></p>"; return; } const content = loadFromLocalStorage(storageKey, `*No content yet. Click Edit to add some.*`); displayDiv.innerHTML = parseMarkdown(content); viewModeDiv.classList.remove('hidden'); editModeDiv.style.display = 'none'; editBtn.classList.remove('hidden'); saveBtn.classList.add('hidden'); cancelBtn.classList.add('hidden');
+                 editBtn.onclick = () => { editArea.value = loadFromLocalStorage(storageKey, ''); viewModeDiv.classList.add('hidden'); editModeDiv.style.display = 'block'; editBtn.classList.add('hidden'); saveBtn.classList.remove('hidden'); cancelBtn.classList.remove('hidden'); editArea.focus(); }; cancelBtn.onclick = () => { viewModeDiv.classList.remove('hidden'); editModeDiv.style.display = 'none'; editBtn.classList.remove('hidden'); saveBtn.classList.add('hidden'); cancelBtn.classList.add('hidden'); const originalContent = loadFromLocalStorage(storageKey, ''); displayDiv.innerHTML = parseMarkdown(originalContent); }; saveBtn.onclick = () => { const newContent = editArea.value; saveToLocalStorage(storageKey, newContent); displayDiv.innerHTML = parseMarkdown(newContent); viewModeDiv.classList.remove('hidden'); editModeDiv.style.display = 'none'; editBtn.classList.remove('hidden'); saveBtn.classList.add('hidden'); cancelBtn.classList.add('hidden'); showToast("Content saved.", "success"); };
+             }
+
+            // --- Copy to Clipboard ---
+             function copyToClipboard(text) { if (!navigator.clipboard) { showToast('Clipboard API not available.', 'warning'); return; } navigator.clipboard.writeText(text).then(() => { showToast('Content copied to clipboard!', 'success'); }).catch(err => { console.error('Failed to copy text: ', err); showToast('Failed to copy content.', 'error'); }); }
+             function formatGoalsAsMarkdown() { let md = "# Goals\n\n"; if (goals.length === 0) return md + "No goals defined."; goals.forEach(goal => { md += `- **${goal.text}**`; if (currentGoal && currentGoal.id === goal.id) { md += ` (Current Focus till: ${formatDate(goal.endDate) || 'N/A'})`; } md += "\n"; }); return md; }
+             function formatDoneListAsMarkdown() { let md = "# Done List\n\n"; const filterValue = doneTimeFilter ? doneTimeFilter.value : 'all'; const goalFilterValue = doneGoalFilter ? doneGoalFilter.value : 'all'; let filteredList = [...doneTasks]; const now = Date.now(); if (filterValue === '7') filteredList = filteredList.filter(task => new Date(task.doneAt).getTime() >= (now - 7 * 24 * 60 * 60 * 1000)); else if (filterValue === '30') filteredList = filteredList.filter(task => new Date(task.doneAt).getTime() >= (now - 30 * 24 * 60 * 60 * 1000)); if (goalFilterValue !== 'all') { if (goalFilterValue === 'none') filteredList = filteredList.filter(task => !task.goalId); else filteredList = filteredList.filter(task => task.goalId === goalFilterValue); } if (filteredList.length === 0) return md + "No tasks marked done (in current view)."; filteredList.sort((a, b) => new Date(a.doneAt) - new Date(b.doneAt)); filteredList.forEach(task => { const goalText = task.goalId ? (goals.find(g => g.id === task.goalId)?.text || 'Deleted Goal') : ''; md += `- **${task.text}**\n`; if (goalText) md += `  - Goal: ${goalText}\n`; md += `  - Action: ${task.actionTaken}\n`; md += `  - Done: ${formatDate(task.doneAt)}\n\n`; }); return md; }
+             function formatTaskBowlAsMarkdown() { let md = "# Task Bowl (Backlog)\n\n"; if (taskBowl.length === 0) return md + "Task Bowl is empty."; const sortedBowl = [...taskBowl].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); sortedBowl.forEach(task => { const goalText = task.goalId ? (goals.find(g => g.id === task.goalId)?.text || 'Deleted Goal') : ''; md += `- **${task.text}**`; if (goalText) md += ` (Goal: ${goalText})`; md += ` (Added: ${formatDate(task.createdAt)})\n`; }); return md; }
+
+             // --- Reset Application ---
+             function confirmResetApp() { showModal( 'Reset Application Data', 'Are you sure you want to reset the app? All tasks, goals, notes, and settings stored in this browser will be permanently deleted.', resetApp, 'Reset' ); }
+             function resetApp() { console.log("Resetting application data..."); Object.values(LS_KEYS).forEach(key => { localStorage.removeItem(key); console.log(`Removed: ${key}`); }); showToast("Application reset. Reloading...", "info", 2000); setTimeout(() => { location.reload(); }, 1500); }
+
+             // --- Settings, Backup, and Data Management ---
+            async function saveFile(content, options) {
+                const { fileName, fileType, description } = options;
+                if (window.showSaveFilePicker) {
+                    try {
+                        const pickerOpts = { suggestedName: fileName, types: [{ description: description, accept: { [fileType]: ['.json'] }, }], };
+                        const handle = await window.showSaveFilePicker(pickerOpts);
+                        const writable = await handle.createWritable();
+                        await writable.write(content);
+                        await writable.close();
+                        showToast(`${fileName} saved successfully!`, 'success');
+                        return;
+                    } catch (error) {
+                        console.error("File System Access API failed. Error:", error);
+                        if (error.name === 'AbortError') { return; }
+                        showToast('Save dialog failed. Using fallback download.', 'warning', 2500);
+                    }
+                }
+                try {
+                    const blob = new Blob([content], { type: fileType });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (fallbackError) {
+                    console.error('Error with fallback file save:', fallbackError);
+                    showToast('File export failed completely.', 'error');
+                }
+            }
+
+            function loadAiSettingsUI() {
+                const settings = loadFromLocalStorage(LS_KEYS.aiSettings, { activeProvider: 'gemini', keys: {} });
+                document.getElementById('ai-provider-select').value = settings.activeProvider || 'gemini';
+                document.getElementById('gemini-key-input').value = settings.keys.gemini || '';
+                document.getElementById('openai-key-input').value = settings.keys.openai || '';
+                document.getElementById('claude-key-input').value = settings.keys.claude || '';
+                document.getElementById('deepseek-key-input').value = settings.keys.deepseek || '';
+            }
+
+            function saveAiSettings() {
+                const settings = {
+                    activeProvider: document.getElementById('ai-provider-select').value,
+                    keys: {
+                        gemini: document.getElementById('gemini-key-input').value.trim(),
+                        openai: document.getElementById('openai-key-input').value.trim(),
+                        claude: document.getElementById('claude-key-input').value.trim(),
+                        deepseek: document.getElementById('deepseek-key-input').value.trim()
+                    }
+                };
+                saveToLocalStorage(LS_KEYS.aiSettings, settings);
+                showToast("AI settings saved successfully!", "success");
+            }
+
+            function setupDataManagement() {
+                setupPlaybookControls('blocked', 'Blocked Playbook Data', LS_KEYS.blockedTips);
+                setupPlaybookControls('stressed', 'Stressed Playbook Data', LS_KEYS.stressedTips);
+                setupPlaybookControls('bored', 'Bored Actions Data', LS_KEYS.boredActions);
+                document.getElementById('export-full-backup-btn').addEventListener('click', exportFullBackup);
+                document.getElementById('import-full-backup-input').addEventListener('change', handleFullBackupImport);
+                document.getElementById('edit-full-backup-btn').addEventListener('click', editFullBackupData);
+                document.getElementById('import-backup-btn').addEventListener('click', () => document.getElementById('import-full-backup-input').click());
+            }
+
+            function setupPlaybookControls(type, title, storageKey) {
+                document.getElementById(`edit-${type}-data-btn`).addEventListener('click', () => editPlaybookData(title, storageKey));
+                document.getElementById(`export-${type}-data-btn`).addEventListener('click', () => exportDataAsJson(storageKey, `${type}-playbook.json`));
+                document.getElementById(`import-${type}-data-input`).addEventListener('change', (e) => handleJsonImport(e, storageKey, title));
+
+                // to link the new button to its corresponding hidden input
+                document.getElementById(`import-${type}-data-btn`).addEventListener('click', () => document.getElementById(`import-${type}-data-input`).click());
+            }
+
+            function editPlaybookData(title, storageKey) {
+                const currentData = loadFromLocalStorage(storageKey, []);
+                const modalBodyDiv = document.createElement('div');
+                modalBodyDiv.innerHTML = `<p>You can edit the raw JSON data for the playbook below.</p>
+                                         <label for="json-edit-textarea">JSON Data:</label>
+                                         <textarea id="json-edit-textarea" rows="15" style="width: 100%; font-family: monospace; margin-top: 5px;"></textarea>`;
+                const textarea = modalBodyDiv.querySelector('#json-edit-textarea');
+                textarea.value = JSON.stringify(currentData, null, 2);
+                const saveCallback = () => {
+                    try {
+                        const newData = JSON.parse(textarea.value);
+                        saveToLocalStorage(storageKey, newData);
+                        showToast(`${title} updated successfully. Reloading app...`, 'success');
+                        setTimeout(() => location.reload(), 1500);
+                    } catch (error) {
+                        console.error("JSON parsing error:", error);
+                        showToast("Invalid JSON format. Please check your data.", "error");
+                    }
+                };
+                showModal(`Edit ${title}`, modalBodyDiv, saveCallback, 'Save Changes');
+                setTimeout(() => textarea.focus(), 50);
+            }
+
+            function exportDataAsJson(storageKey, filename) {
+                const data = loadFromLocalStorage(storageKey, []);
+                const jsonString = JSON.stringify(data, null, 2);
+                saveFile(jsonString, {
+                    fileName: filename,
+                    fileType: 'application/json',
+                    description: 'JSON Playbook Data'
+                });
+            }
+
+            function handleJsonImport(event, storageKey, title) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const confirmCallback = () => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            saveToLocalStorage(storageKey, data);
+                            showToast(`${title} imported successfully. Reloading app...`, 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        } catch (error) {
+                            showToast("Import failed. Invalid JSON file.", "error");
+                            console.error("Import error:", error);
+                        } finally {
+                            event.target.value = '';
+                        }
+                    };
+                    showModal('Confirm Import', `This will overwrite your current ${title}. Are you sure?`, confirmCallback, 'Overwrite');
+                };
+                reader.readAsText(file);
+            }
+
+            function generateBackupObject() {
+                const backupData = {};
+                Object.values(LS_KEYS).forEach(key => {
+                    if (key !== LS_KEYS.geminiApiKey) {
+                        const keyName = key.replace(LS_PREFIX, '');
+                        backupData[keyName] = loadFromLocalStorage(key);
+                    }
+                });
+                return {
+                    version: "2.0-backup",
+                    exportedAt: getCurrentTimestamp(),
+                    data: backupData
+                };
+            }
+
+            function exportFullBackup() {
+                const backupObject = generateBackupObject();
+                const jsonString = JSON.stringify(backupObject, null, 2);
+                const dateStamp = new Date().toISOString().slice(0, 10);
+                saveFile(jsonString, {
+                    fileName: `guide-app-backup-${dateStamp}.json`,
+                    fileType: 'application/json',
+                    description: 'Guide App Full Backup'
+                });
+            }
+
+            function handleFullBackupImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const restoreCallback = () => {
+                        try {
+                            const backup = JSON.parse(e.target.result);
+                            if (!backup.data || !backup.version.startsWith("2.0")) {
+                                throw new Error("Invalid or incompatible backup file format.");
+                            }
+                            Object.entries(backup.data).forEach(([keyName, data]) => {
+                                const lsKey = LS_PREFIX + keyName;
+                                if (Object.values(LS_KEYS).includes(lsKey)) {
+                                     saveToLocalStorage(lsKey, data);
+                                }
+                            });
+                            showToast('Backup restored successfully! Reloading...', 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        } catch (error) {
+                             showToast(`Restore failed: ${error.message}`, 'error', 5000);
+                             console.error("Restore error:", error);
+                        } finally {
+                             event.target.value = '';
+                        }
+                    };
+                     showModal('Overwrite All Data?', 'Restoring from a backup will overwrite ALL current data in the app. This cannot be undone. Are you sure?', restoreCallback, 'Yes, Overwrite All');
+                };
+                reader.readAsText(file);
+            }
+
+            function editFullBackupData() {
+                const backupObject = generateBackupObject();
+                const modalBodyDiv = document.createElement('div');
+                modalBodyDiv.innerHTML = `<p><strong>Warning:</strong> Editing this data directly is powerful but risky. Invalid JSON or incorrect structure can cause the app to fail on restore. Always keep a safe copy of your last exported backup.</p>
+                                         <label for="json-edit-textarea">Full Backup JSON Data:</label>
+                                         <textarea id="json-edit-textarea" rows="15" style="width: 100%; font-family: monospace; margin-top: 5px;"></textarea>`;
+                const textarea = modalBodyDiv.querySelector('#json-edit-textarea');
+                textarea.value = JSON.stringify(backupObject, null, 2);
+                const saveCallback = () => {
+                    try {
+                        const newBackupData = JSON.parse(textarea.value);
+                        if (!newBackupData.data || !newBackupData.version) {
+                            throw new Error("Invalid backup format. Must contain 'version' and 'data' properties.");
+                        }
+                        Object.entries(newBackupData.data).forEach(([keyName, data]) => {
+                            const lsKey = LS_PREFIX + keyName;
+                            if (Object.values(LS_KEYS).includes(lsKey)) {
+                                saveToLocalStorage(lsKey, data);
+                            }
+                        });
+                        showToast('Backup data updated successfully! Reloading...', 'success');
+                        setTimeout(() => location.reload(), 1500);
+                    } catch (error) {
+                        showToast(`Save failed: ${error.message}`, 'error', 5000);
+                        console.error("Error saving full backup data:", error);
+                    }
+                };
+                showModal('Edit Full Backup Data', modalBodyDiv, saveCallback, 'Save All Changes');
+                setTimeout(() => textarea.focus(), 50);
+            }
+
+            // --- AI Assist Feature ---
+            async function runAIAssist() {
+                if (!navigator.onLine) {
+                    showToast("Offline. Cannot get AI assist.", "warning");
+                    return;
+                }
+
+                const assistBtn = document.getElementById('ai-assist-btn');
+                assistBtn.textContent = 'Thinking...';
+                assistBtn.disabled = true;
+
+                try {
+                    const context = buildFullContext();
+                    const prompt = buildAssistPrompt(context);
+                    const response = await callAIProvider(prompt);
+
+                    if (response) {
+                        showAssistResults(response);
+                    } else {
+                        throw new Error("AI returned no suggestions.");
+                    }
+                } catch (error) {
+                    console.error("AI Assist failed:", error);
+                    showToast(`AI Assist failed: ${error.message}`, 'error', 4000);
+                } finally {
+                    assistBtn.textContent = '🎯 What should I focus on?';
+                    assistBtn.disabled = false;
+                }
+            }
+
+            function getFullAppContextForAI() {
+                // This function gathers a snapshot of the entire app state for AI analysis.
+                // It purposefully omits sensitive data like API keys.
+                const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+                const recentDone = doneTasks.filter(t => new Date(t.doneAt).getTime() >= weekAgo);
+
+                return {
+                    timestamp: getCurrentTimestamp(),
+                    currentGoal: currentGoal,
+                    allGoals: goals.map(g => ({ text: g.text, focusEndDate: g.endDate })),
+                    pendingTasks: pendingTasks.map(t => ({ text: t.text, goalId: t.goalId })),
+                    taskBowl: taskBowl.map(t => ({ text: t.text, goalId: t.goalId, createdAt: t.createdAt })),
+                    doneTasks: doneTasks.map(t => ({ text: t.text, goalId: t.goalId, actionTaken: t.actionTaken, doneAt: t.doneAt })),
+                    reminders: loadFromLocalStorage(LS_KEYS.reminders, ''),
+                    references: loadFromLocalStorage(LS_KEYS.references, ''),
+                };
+            }
+
+            // --- AI Insights Feature Functions ---
+
+            function buildFullContext() {
+                // Get recent done tasks (last 7 days)
+                const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+                const recentDone = doneTasks.filter(t =>
+                    new Date(t.doneAt).getTime() >= weekAgo
+                ).slice(0, 20);
+
+                return {
+                    currentGoal: currentGoal,
+                    pendingTasks: pendingTasks,
+                    taskBowl: taskBowl.slice(0, 60), // Limit to avoid huge prompts
+                    recentDone: recentDone,
+                    goals: goals,
+                    todayDate: getTodayDateString()
+                };
+            }
+
+
+            // 1. Activity Summary
+            function buildSummaryPrompt(tasksToSummarize) {
+                if (tasksToSummarize.length === 0) {
+                    return "No tasks were completed in this period.";
+                }
+                const taskList = tasksToSummarize.map(t => `- "${t.text}" (Action: ${t.actionTaken})`).join('\n');
+                return `As a productivity coach, analyze the following list of tasks I've completed recently.
+
+                Completed Tasks:
+                ${taskList}
+
+                Based on this, provide a concise summary (3-4 sentences) of my activity. Identify 1-2 key themes or areas of focus.
+                Present the output in simple Markdown.`;
+            }
+
+            async function handleGenerateSummary() {
+                const weeksInput = document.getElementById('summary-weeks-input');
+                const generateBtn = document.getElementById('generate-summary-btn');
+                const resultDiv = document.getElementById('summary-result-div');
+
+                const nWeeks = parseInt(weeksInput.value, 10);
+                if (isNaN(nWeeks) || nWeeks < 1) {
+                    showToast("Please enter a valid number of weeks.", "warning");
+                    return;
+                }
+
+                generateBtn.textContent = 'Analyzing...';
+                generateBtn.disabled = true;
+                resultDiv.style.display = 'none';
+
+                try {
+                    const cutoffDate = Date.now() - (nWeeks * 7 * 24 * 60 * 60 * 1000);
+                    const relevantTasks = doneTasks.filter(t => new Date(t.doneAt).getTime() >= cutoffDate);
+
+                    const prompt = buildSummaryPrompt(relevantTasks);
+                    let summary;
+                    if (relevantTasks.length === 0) {
+                        summary = "You haven't completed any tasks in the selected period.";
+                    } else {
+                        summary = await callAIProvider(prompt);
+                    }
+
+                    resultDiv.innerHTML = parseMarkdown(summary);
+                    resultDiv.style.display = 'block';
+
+                } catch (error) {
+                    resultDiv.innerHTML = `An error occurred: ${error.message}`;
+                    resultDiv.style.display = 'block';
+                } finally {
+                    generateBtn.textContent = 'Generate';
+                    generateBtn.disabled = false;
+                }
+            }
+
+
+            // 2. Fallen Through Items
+            function buildFallenThroughPrompt(context) {
+                // We can reuse the existing context builder and just stringify it.
+                const contextString = JSON.stringify({
+                    currentGoal: context.currentGoal,
+                    allGoals: context.allGoals,
+                    pendingTasks: context.pendingTasks,
+                    taskBowl: context.taskBowl
+                }, null, 2);
+
+                return `You are a productivity expert reviewing my task and goal data. Your goal is to find important things I might be neglecting.
+
+                My Data:
+                ${contextString}
+
+                Analyze this data and identify 2-3 high-priority tasks from my 'taskBowl' that seem neglected, especially if they are old or linked to my current goal. Also, point out any of my 'allGoals' that have very few associated tasks in the 'pending' or 'bowl' lists.
+
+                Present your findings as a short, actionable list in Markdown. Be concise and direct.`;
+            }
+
+            async function handleAnalyzeFallen() {
+                const analyzeBtn = document.getElementById('analyze-fallen-btn');
+                const resultDiv = document.getElementById('fallen-result-div');
+
+                analyzeBtn.textContent = 'Analyzing...';
+                analyzeBtn.disabled = true;
+                resultDiv.style.display = 'none';
+
+                try {
+                    const context = getFullAppContextForAI();
+                    const prompt = buildFallenThroughPrompt(context);
+                    const analysis = await callAIProvider(prompt);
+                    resultDiv.innerHTML = parseMarkdown(analysis);
+                    resultDiv.style.display = 'block';
+                } catch (error) {
+                    resultDiv.innerHTML = `An error occurred: ${error.message}`;
+                    resultDiv.style.display = 'block';
+                } finally {
+                    analyzeBtn.textContent = 'Analyze Now';
+                    analyzeBtn.disabled = false;
+                }
+            }
+
+
+            // 3. General Q&A
+            function buildGeneralQuestionPrompt(context, question) {
+                const contextString = JSON.stringify(context, null, 2);
+                return `You are my personal productivity assistant. I will provide you with my complete data in JSON format and then ask a question. Answer the question based *only* on the data provided.
+
+                My Data:
+                ${contextString}
+
+                ---
+                My Question: "${question}"
+                ---
+
+                Please provide a clear and concise answer.`;
+            }
+
+            async function handleAskGeneralQuestion() {
+                const questionInput = document.getElementById('ai-question-input');
+                const askBtn = document.getElementById('submit-ai-question-btn');
+                const resultDiv = document.getElementById('ai-question-result-div');
+
+                const question = questionInput.value.trim();
+                if (!question) {
+                    showToast("Please enter a question.", "warning");
+                    return;
+                }
+
+                askBtn.textContent = 'Thinking...';
+                askBtn.disabled = true;
+                resultDiv.style.display = 'none';
+
+                try {
+                    const context = getFullAppContextForAI();
+                    const prompt = buildGeneralQuestionPrompt(context, question);
+                    const answer = await callAIProvider(prompt);
+                    resultDiv.innerHTML = parseMarkdown(answer);
+                    resultDiv.style.display = 'block';
+                } catch (error) {
+                    resultDiv.innerHTML = `An error occurred: ${error.message}`;
+                    resultDiv.style.display = 'block';
+                } finally {
+                    askBtn.textContent = 'Ask AI';
+                    askBtn.disabled = false;
+                }
+            }
+
+            function buildAssistPrompt(context) {
+                const pendingList = context.pendingTasks.length > 0
+                    ? context.pendingTasks.map(t => `- "${t.text}"${t.goalId ? ' [goal-linked]' : ''}`).join('\n')
+                    : '(Empty)';
+
+                const bowlList = context.taskBowl.length > 0
+                    ? context.taskBowl.slice(0, 15).map(t => `- "${t.text}"${t.goalId ? ' [goal-linked]' : ''}`).join('\n')
+                    : '(Empty)';
+
+                const recentDoneList = context.recentDone.length > 0
+                    ? context.recentDone.slice(0, 10).map(t => `- "${t.text}" (${t.actionTaken})`).join('\n')
+                    : '(None recently)';
+
+                const goalInfo = context.currentGoal
+                    ? `Current Goal: "${context.currentGoal.text}" (ending ${formatDate(context.currentGoal.endDate)})`
+                    : 'No active goal set';
+
+                // Extract key philosophies for the AI
+                const philosophy = `User works best: one thing at a time, small forward momentum, "done begets done", shipping > planning, fast decisions, 30-min actionable steps.`;
+
+                return `You are a productivity coach helping prioritize tasks. Be direct and practical.
+
+            ${philosophy}
+
+            CURRENT STATE (${context.todayDate}):
+            ${goalInfo}
+
+            PENDING TODAY (${context.pendingTasks.length}/3 slots):
+            ${pendingList}
+
+            RECENT COMPLETIONS (last 7 days):
+            ${recentDoneList}
+
+            TASK BACKLOG (${context.taskBowl.length} total, showing first 15):
+            ${bowlList}
+
+            Based on the above context, what should I focus on RIGHT NOW? Consider:
+            1. Current goal progress and deadline
+            2. Momentum from recent completions
+            3. Available pending slots
+            4. High-value items in backlog
+
+            Provide 3-5 prioritized tasks with ONE-LINE reasons. Format:
+            1. [Task] - [Why now]
+            2. [Task] - [Why now]
+
+            Be specific about WHICH exact tasks from the lists, don't invent new ones. If suggesting from backlog, say "From bowl:".`;
+            }
+
+            function showAssistResults(response) {
+                // Parse the response into actionable items
+                const lines = response.split('\n').filter(line => line.trim());
+                const suggestions = [];
+
+                lines.forEach(line => {
+                    // Match numbered items like "1. Task - Reason" or "2. From bowl: Task - Reason"
+                    const match = line.match(/^\d+\.\s*(.+?)\s*-\s*(.+)$/);
+                    if (match) {
+                        suggestions.push({
+                            task: match[1].replace(/^From bowl:\s*/i, '').trim(),
+                            reason: match[2].trim(),
+                            fromBowl: match[1].toLowerCase().includes('from bowl')
+                        });
+                    }
+                });
+
+                if (suggestions.length === 0) {
+                    showToast("AI couldn't parse suggestions. Try again.", "warning");
+                    return;
+                }
+
+                // Create modal content
+                const modalBodyDiv = document.createElement('div');
+                modalBodyDiv.innerHTML = `
+                    <p><strong>Here's what to focus on:</strong></p>
+                    <ol style="line-height: 1.8;">
+                        ${suggestions.map(s => `
+                            <li>
+                                <strong>${s.task}</strong>
+                                ${s.fromBowl ? '<span style="color: var(--color-text-secondary);"> (from bowl)</span>' : ''}
+                                <br>
+                                <small style="color: var(--color-text-secondary);">→ ${s.reason}</small>
+                            </li>
+                        `).join('')}
+                    </ol>
+                    <hr style="margin: 15px 0;">
+                    <p style="font-size: 0.9em; color: var(--color-text-secondary);">
+                        ${pendingTasks.length >= 3 ?
+                            '💡 Pending is full. Complete or delete tasks first.' :
+                            `💡 You have ${3 - pendingTasks.length} pending slot${3 - pendingTasks.length > 1 ? 's' : ''} available.`}
+                    </p>
+                `;
+
+                showModal('AI Priority Guide', modalBodyDiv, null, 'Got it');
+            }
+            // --- Initialization ---
+            function initializeApp() {
+                 if (loadFromLocalStorage(LS_KEYS.blockedTips) === null) {
+                     saveToLocalStorage(LS_KEYS.blockedTips, defaultProductivityTips);
+                 }
+                 if (loadFromLocalStorage(LS_KEYS.stressedTips) === null) {
+                     saveToLocalStorage(LS_KEYS.stressedTips, defaultAllTipsStressed);
+                 }
+                  if (loadFromLocalStorage(LS_KEYS.boredActions) === null) {
+                     saveToLocalStorage(LS_KEYS.boredActions, defaultActionsBored);
+                 }
+
+                 goals = loadFromLocalStorage(LS_KEYS.goals, []); currentGoal = loadFromLocalStorage(LS_KEYS.currentGoal, null); pendingTasks = loadFromLocalStorage(LS_KEYS.pending, []); doneTasks = loadFromLocalStorage(LS_KEYS.done, []); taskBowl = loadFromLocalStorage(LS_KEYS.bowl, []); boredModeState = loadFromLocalStorage(LS_KEYS.boredState, { userActions: [] });
+                 routines = loadFromLocalStorage(LS_KEYS.routines, []);
+                 const savedApiKey = loadFromLocalStorage(LS_KEYS.geminiApiKey, null);
+                 if (savedApiKey) { GEMINI_API_KEY = savedApiKey; console.log("Loaded Gemini API Key from localStorage."); }
+                 if (!Array.isArray(goals)) goals = []; if (!Array.isArray(pendingTasks)) pendingTasks = []; if (!Array.isArray(doneTasks)) doneTasks = []; if (!Array.isArray(taskBowl)) taskBowl = []; if (!boredModeState || typeof boredModeState !== 'object') boredModeState = {}; if (!Array.isArray(boredModeState.userActions)) boredModeState.userActions = []; if (!Array.isArray(routines)) routines = [];
+                 doneTasks.sort((a, b) => new Date(b.doneAt) - new Date(a.doneAt)); taskBowl.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+                 pendingTasksList = document.getElementById('pending-tasks-list'); addTaskBtn = document.getElementById('add-task-btn'); addTaskForm = document.getElementById('add-task-form'); newTaskInput = document.getElementById('new-task-input'); tagWithGoalCheckbox = document.getElementById('tag-with-goal-checkbox'); submitAddTaskBtn = document.getElementById('submit-add-task'); autoAddTaskBtn = document.getElementById('auto-add-task'); cancelAddTaskBtn = document.getElementById('cancel-add-task'); emptyPendingMessage = document.getElementById('empty-pending-message'); goalsList = document.getElementById('goals-list'); addNewGoalBtn = document.getElementById('add-new-goal-btn'); addGoalForm = document.getElementById('add-goal-form'); newGoalInput = document.getElementById('new-goal-input'); submitAddGoalBtn = document.getElementById('submit-add-goal'); cancelAddGoalBtn = document.getElementById('cancel-add-goal'); emptyGoalsMessage = document.getElementById('empty-goals-message'); doneListContainer = document.getElementById('done-list'); doneTimeFilter = document.getElementById('done-time-filter'); doneGoalFilter = document.getElementById('done-goal-filter'); emptyDoneMessage = document.getElementById('empty-done-message'); taskBowlListContainer = document.getElementById('task-bowl-list'); emptyTaskBowlMessage = document.getElementById('empty-task-bowl-message'); referencesView = document.getElementById('references-view'); remindersView = document.getElementById('reminders-view'); copyGoalsBtn = document.getElementById('copy-goals-btn'); copyDoneBtn = document.getElementById('copy-done-btn'); copyBowlBtn = document.getElementById('copy-bowl-btn'); copyRefsBtn = document.getElementById('copy-refs-btn'); copyRemindersBtn = document.getElementById('copy-reminders-btn'); resetAppBtn = document.getElementById('reset-app-btn');
+                 loadRoutineBtn = document.getElementById('load-routine-btn'); routineLoaderArea = document.getElementById('routine-loader-area'); routinesView = document.getElementById('routines-view'); routinesList = document.getElementById('routines-list'); addNewRoutineBtn = document.getElementById('add-new-routine-btn'); addRoutineForm = document.getElementById('add-routine-form'); newRoutineNameInput = document.getElementById('new-routine-name'); newRoutineTasksInput = document.getElementById('new-routine-tasks'); submitAddRoutineBtn = document.getElementById('submit-add-routine'); cancelAddRoutineBtn = document.getElementById('cancel-add-routine'); emptyRoutinesMessage = document.getElementById('empty-routines-message'); editRoutineIdInput = document.getElementById('edit-routine-id');
+                 goalGuideBtn = document.getElementById('goal-guide-btn');
+                 // NEW: Onboarding Elements
+                 onboardingTriggerWrapper = document.getElementById('onboarding-trigger-wrapper');
+                 startOnboardingBtn = document.getElementById('start-onboarding-btn');
+
+                 updateCurrentGoalDisplay(); renderPendingTasks(); populateGoalFilters();
+
+                 BlockedMode.setup(loadFromLocalStorage(LS_KEYS.blockedTips, []));
+                 const boredActions = loadFromLocalStorage(LS_KEYS.boredActions, []);
+                 BoredMode.setup(boredActions, boredModeState);
+                 const stressedTips = loadFromLocalStorage(LS_KEYS.stressedTips, {});
+                 const stressedQuotes = stressedTips.generic || [];
+                 StressedMode.setup(stressedTips, stressedQuotes);
+
+                // --- Load and Apply Theme ---
+                const savedTheme = loadFromLocalStorage(LS_KEYS.theme, 'light');
+                applyTheme(savedTheme);
+
+                // --- Initialize Web Worker ---
+                blitzWorker = createBlitzWorker();
+                blitzWorker.onmessage = function(e) {
+                    const { event, taskId, time } = e.data;
+                    switch(event) {
+                        case 'tick':
+                            handleBlitzTick(taskId, time);
+                            break;
+                        case 'done':
+                            handleBlitzDone(taskId);
+                            break;
+                    }
+                };
+
+                 addEventListeners();
+                 setupDataManagement();
+                 showView('main-view');
+                 console.log("Guide App Initialized (v32 - with onboarding)");
+            }
+
+            // --- Event Listeners Setup ---
+            function addEventListeners() {
+                 backButton.addEventListener('click', () => showView('main-view'));
+                 seeAllGoalsLink.addEventListener('click', (e) => { e.preventDefault(); showView('goals-view'); });
+                 document.getElementById('nav-ai-insights').addEventListener('click', () => showView('ai-insights-view'));
+                 document.getElementById('nav-blocked').addEventListener('click', () => showView('blocked-view'));
+                 document.getElementById('nav-bored').addEventListener('click', () => showView('bored-view'));
+                 document.getElementById('nav-stressed').addEventListener('click', () => showView('stressed-view'));
+                 document.getElementById('nav-done').addEventListener('click', () => showView('done-list-view'));
+                 document.getElementById('nav-bowl').addEventListener('click', () => showView('task-bowl-view'));
+                 document.getElementById('nav-refs').addEventListener('click', () => showView('references-view'));
+                 document.getElementById('nav-reminders').addEventListener('click', () => showView('reminders-view'));
+                 document.getElementById('nav-routines').addEventListener('click', () => showView('routines-view'));
+                 document.getElementById('nav-settings').addEventListener('click', () => showView('settings-view'));
+                 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+                 mainContentArea.addEventListener('click', (e) => {
+                    if (e.target && e.target.classList.contains('edit-task-goal-link')) {
+                        e.preventDefault();
+                        const taskId = e.target.dataset.taskId;
+                        const listName = e.target.dataset.listName;
+                        promptEditTaskGoal(taskId, listName);
+                    }
+                 });
+
+                 addNewGoalBtn.addEventListener('click', () => { addGoalForm.classList.remove('hidden'); addNewGoalBtn.classList.add('hidden'); newGoalInput.focus(); });
+                 cancelAddGoalBtn.addEventListener('click', () => { addGoalForm.classList.add('hidden'); addNewGoalBtn.classList.remove('hidden'); newGoalInput.value = ''; });
+                 submitAddGoalBtn.addEventListener('click', handleAddGoal);
+                 newGoalInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAddGoal(); });
+
+                 doneTimeFilter.addEventListener('change', renderDoneList);
+                 const bowlGoalFilter = document.getElementById('bowl-goal-filter');
+                 doneGoalFilter.addEventListener('change', renderDoneList);
+                 bowlGoalFilter.addEventListener('change', () => {
+                    renderTaskBowl(false);
+                    updateGuideButtonVisibility();
+                 });
+                 goalGuideBtn.addEventListener('click', startGoalGuide);
+
+                 if (copyGoalsBtn) copyGoalsBtn.addEventListener('click', () => copyToClipboard(formatGoalsAsMarkdown()));
+                 if (copyDoneBtn) copyDoneBtn.addEventListener('click', () => copyToClipboard(formatDoneListAsMarkdown()));
+                 if (copyBowlBtn) copyBowlBtn.addEventListener('click', () => copyToClipboard(formatTaskBowlAsMarkdown()));
+                 if (copyRefsBtn) copyRefsBtn.addEventListener('click', () => copyToClipboard(loadFromLocalStorage(LS_KEYS.references, '')));
+                 if (copyRemindersBtn) copyRemindersBtn.addEventListener('click', () => copyToClipboard(loadFromLocalStorage(LS_KEYS.reminders, '')));
+                 if (resetAppBtn) resetAppBtn.addEventListener('click', confirmResetApp);
+
+                 document.getElementById('save-ai-settings-btn').addEventListener('click', saveAiSettings);
+
+                 loadRoutineBtn.addEventListener('click', () => showView('routines-view'));
+                 addNewRoutineBtn.addEventListener('click', () => {
+                     editRoutineIdInput.value = ''; newRoutineNameInput.value = ''; newRoutineTasksInput.value = '';
+                     addRoutineForm.classList.remove('hidden'); addNewRoutineBtn.classList.add('hidden'); newRoutineNameInput.focus();
+                 });
+                 cancelAddRoutineBtn.addEventListener('click', () => { addRoutineForm.classList.add('hidden'); addNewRoutineBtn.classList.remove('hidden'); });
+                 submitAddRoutineBtn.addEventListener('click', handleAddOrUpdateRoutine);
+
+                 // NEW: Event Listener for Onboarding
+                 if (startOnboardingBtn) startOnboardingBtn.addEventListener('click', showOnboardingModal);
+
+                 // NEW: Event Listener for Onboarding (Settings View)
+                 const settingsOnboardingBtn = document.getElementById('settings-onboarding-btn');
+                 if (settingsOnboardingBtn) {
+                     settingsOnboardingBtn.addEventListener('click', showOnboardingModal);
+                 }
+
+                 BlockedMode.addListeners(); BoredMode.addListeners(); StressedMode.addListeners();
+
+                const addTaskBtnPending = document.getElementById('add-task-btn');
+                const addTaskBtnBowl = document.getElementById('add-task-to-bowl-btn');
+
+                 addTaskBtnPending.addEventListener('click', () => {
+                    const pendingTasksListEl = document.getElementById('pending-tasks-list');
+                    pendingTasksListEl.before(addTaskForm);
+                    addTaskForm.classList.remove('hidden');
+                    addTaskBtnPending.classList.add('hidden');
+                    updateAddTaskPlaceholder();
+                    newTaskInput.focus();
+                 });
+
+                 addTaskBtnBowl.addEventListener('click', () => {
+                    const taskBowlList = document.getElementById('task-bowl-list');
+                    taskBowlList.before(addTaskForm);
+                    addTaskForm.classList.remove('hidden');
+                    addTaskBtnBowl.classList.add('hidden');
+                    updateAddTaskPlaceholder();
+                    newTaskInput.focus();
+                 });
+
+                cancelAddTaskBtn.addEventListener('click', () => {
+                    addTaskForm.classList.add('hidden');
+                    addTaskBtnPending.classList.remove('hidden');
+                    addTaskBtnBowl.classList.remove('hidden');
+                    newTaskInput.value = '';
+                });
+
+                const performAddTask = (isAuto = false) => {
+                    const forceToBowl = addTaskForm.parentElement.id === 'task-bowl-view';
+                    if (isAuto) {
+                        addAutoTask(forceToBowl);
+                    } else {
+                        handleAddTask(forceToBowl);
+                    }
+                 };
+
+                 submitAddTaskBtn.addEventListener('click', () => performAddTask(false));
+                 autoAddTaskBtn.addEventListener('click', () => performAddTask(true));
+                 newTaskInput.addEventListener('keypress', (e) => {
+                     if (e.key === 'Enter') {
+                         performAddTask(false);
+                     }
+                 });
+
+                 // AI Insights View Listeners
+                document.getElementById('generate-summary-btn').addEventListener('click', handleGenerateSummary);
+                document.getElementById('analyze-fallen-btn').addEventListener('click', handleAnalyzeFallen);
+                document.getElementById('submit-ai-question-btn').addEventListener('click', handleAskGeneralQuestion);
+
+                // Optional: Allow Enter key for the question input
+                document.getElementById('ai-question-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault(); // prevent new line
+                        handleAskGeneralQuestion();
+                    }
+                });
+
+                document.getElementById('ai-assist-btn').addEventListener('click', runAIAssist);
+
+                // Optional: Keyboard shortcut (Ctrl/Cmd + /) for AI assist
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+                        e.preventDefault();
+                        if (document.getElementById('main-view').classList.contains('active')) {
+                            runAIAssist();
+                        }
+                    }
+                });
+            }
+
+             // ==================================================================
+             // === MODULE: Blocked Mode Logic ===
+             // ==================================================================
+             const BlockedMode = (function() { let tipsData = []; let blockedMainContent, tipDisplay, randomTipDiv, unblockBtn, allTipsBtn, newTipBtn, unblockForm, allTipsDiv, blockSelector, relevantTipsDiv, unblockBackBtn, allTipsBackBtn, corePrinciplesDiv, actionFrameworkDiv, taskManagementDiv; function displayRandomTip() { if(!tipsData || tipsData.length===0) { randomTipDiv.innerHTML = `<div class="tip-quote">No tips available. Add some in Settings.</div>`; return; } const tip=tipsData[Math.floor(Math.random()*tipsData.length)]; randomTipDiv.innerHTML = `<span class="tip-category">${tip.category}</span><div class="tip-quote">"${tip.text}"</div>`; } function displayAllTips() { corePrinciplesDiv.innerHTML = ''; actionFrameworkDiv.innerHTML = ''; taskManagementDiv.innerHTML = ''; if(!tipsData || tipsData.length===0) return; tipsData.forEach(tip => { const tipHTML = `<div class="tip-item"><span class="tip-category">${tip.category}</span><div class="tip-quote">"${tip.text}"</div></div>`; if (tip.section === "Core Principles") corePrinciplesDiv.innerHTML += tipHTML; else if (tip.section === "Action Framework") actionFrameworkDiv.innerHTML += tipHTML; else if (tip.section === "Task Management") taskManagementDiv.innerHTML += tipHTML; }); } function displayRelevantTips() { const issue=blockSelector.value; if(!issue || !tipsData){relevantTipsDiv.classList.add('hidden');return;} const filtered=tipsData.filter(t=>t.issues && t.issues.includes(issue)); if(filtered.length===0){relevantTipsDiv.innerHTML='<p>No specific tips found.</p>';} else {let html=`<h3>Recommended Strategies</h3>`; filtered.forEach(tip=>{html+=`<div class="tip-item"><span class="tip-category">${tip.category}</span><div class="tip-quote">"${tip.text}"</div></div>`;}); relevantTipsDiv.innerHTML=html;} relevantTipsDiv.classList.remove('hidden');} function showBlockedSubView(targetId) { if(!blockedMainContent) return; blockedMainContent.classList.add('hidden'); unblockForm.classList.add('hidden'); allTipsDiv.classList.add('hidden'); const target = document.getElementById(targetId); if(target) target.classList.remove('hidden');} return { setup: (tips) => { tipsData = tips; }, initDisplay: () => { if (randomTipDiv) displayRandomTip(); showBlockedSubView('blocked-main-content'); if(relevantTipsDiv) relevantTipsDiv.classList.add('hidden'); if(blockSelector) blockSelector.value = ""; }, addListeners: () => { blockedMainContent = document.getElementById('blocked-main-content'); tipDisplay = document.getElementById('tip-display'); randomTipDiv = document.getElementById('random-tip-blocked'); unblockBtn = document.getElementById('unblock-btn'); allTipsBtn = document.getElementById('all-tips-btn-blocked'); newTipBtn = document.getElementById('new-tip-btn-blocked'); unblockForm = document.getElementById('unblock-form-blocked'); allTipsDiv = document.getElementById('all-tips-blocked'); blockSelector = document.getElementById('block-selector'); relevantTipsDiv = document.getElementById('relevant-tips-blocked'); unblockBackBtn = unblockForm?.querySelector('.back-btn'); allTipsBackBtn = allTipsDiv?.querySelector('.back-btn'); corePrinciplesDiv = document.getElementById('core-principles-blocked'); actionFrameworkDiv = document.getElementById('action-framework-blocked'); taskManagementDiv = document.getElementById('task-management-blocked'); if (newTipBtn) newTipBtn.addEventListener('click', displayRandomTip); if (unblockBtn) unblockBtn.addEventListener('click', () => showBlockedSubView('unblock-form-blocked')); if (allTipsBtn) allTipsBtn.addEventListener('click', () => { displayAllTips(); showBlockedSubView('all-tips-blocked'); }); if (blockSelector) blockSelector.addEventListener('change', displayRelevantTips); if (unblockBackBtn) unblockBackBtn.addEventListener('click', () => showBlockedSubView('blocked-main-content')); if (allTipsBackBtn) allTipsBackBtn.addEventListener('click', () => showBlockedSubView('blocked-main-content')); } }; })();
+             const defaultProductivityTips = [  {text: "Focus on the bigger picture",category: "Mindset",section: "Core Principles",issues: ["overwhelm", "focus"]  },  {text: "Have faith in your ideas",category: "Mindset",section: "Core Principles",issues: ["motivation", "shipping"]  },  {text: "Don't let fear of asking hold you back",category: "Mindset",section: "Core Principles",issues: ["starting", "decision"]  },  {text: "No perfect plan exists, start with good enough",category: "Mindset",section: "Core Principles",issues: ["starting", "decision"]  },  {text: "Deliver four iterations in short loops - bad to great - instead of a single perfect one.",category: "Mindset",section: "Core Principles",issues: ["starting", "decision"]  },  {text: "If stuck for 5+ minutes, take a call and move on; Most decisions are cheap. And reversible.",category: "Mindset",section: "Core Principles",issues: ["starting", "decision"]  },  {text: "If stuck for 5+ minutes, take a call and move on; Most decisions are cheap. And reversible.",category: "Mindset",section: "Core Principles",issues: ["starting", "decision"]  },  {text: "Be careful sharing incomplete thoughts",category: "Mindset",section: "Core Principles",issues: ["decision"]  },  {text: "Everyone has their niche",category: "Mindset",section: "Core Principles",issues: ["motivation", "focus"]  },  {text: "Tell your story",category: "Mindset",section: "Core Principles",issues: ["motivation"]  },  {text: "Document weekly summaries",category: "Mindset",section: "Core Principles",issues: ["focus", "motivation"]  },  {text: "Write detailed pieces",category: "Mindset",section: "Core Principles",issues: ["focus"]  },  {text: "Take more leaps",category: "Productivity Philosophy",section: "Core Principles",issues: ["starting", "decision"]  },  {text: "Work best one thing at a time",category: "Productivity Philosophy",section: "Core Principles",issues: ["overwhelm", "focus"]  },  {text: "Small forward momentum helps",category: "Productivity Philosophy",section: "Core Principles",issues: ["focus", "motivation", "starting"]  },  {text: "Avoid uncategorized lists",category: "Productivity Philosophy",section: "Core Principles",issues: ["overwhelm", "focus"]  },  {text: "Quantity over quality initially",category: "Getting Started",section: "Action Framework",issues: ["starting", "overwhelm"]  },  {text: "Tasks as 'creative plays'",category: "Getting Started",section: "Action Framework",issues: ["starting", "motivation"]  },  {text: "Remove self-imposed timelines",category: "Getting Started",section: "Action Framework",issues: ["starting", "overwhelm"]  },  {text: "Break down into small steps",category: "Getting Started",section: "Action Framework",issues: ["starting", "overwhelm"]  },  {text: "Delegate",category: "Getting Started",section: "Action Framework",issues: ["overwhelm"]  },  {text: "Get into flow",category: "Getting Started",section: "Action Framework",issues: ["focus", "starting", "motivation"]  },  {text: "Difficult phases strategy",category: "Getting Started",section: "Action Framework",issues: ["motivation", "focus"]  },  {text: "Tasks get done, projects postponed",category: "Execution Strategies",section: "Action Framework",issues: ["overwhelm", "starting"]  },  {text: "'Done begets done'",category: "Execution Strategies",section: "Action Framework",issues: ["motivation", "shipping"]  },  {text: "Multiple iterations > perfection",category: "Execution Strategies",section: "Action Framework",issues: ["shipping", "starting"]  },  {text: "Time-boxing > scope estimation",category: "Execution Strategies",section: "Action Framework",issues: ["focus", "shipping", "overwhelm"]  },  {text: "Make faster decisions",category: "Execution Strategies",section: "Action Framework",issues: ["decision", "focus"]  },  {text: "Planning to doing quickly",category: "Execution Strategies",section: "Action Framework",issues: ["starting", "decision"]  },  {text: "Rapid feedback cycles (2-2-2)",category: "Shipping Framework",section: "Action Framework",issues: ["shipping", "overwhelm"]  },  {text: "Keys to shipping",category: "Shipping Framework",section: "Action Framework",issues: ["shipping"]  },  {text: "Share progress updates",category: "Shipping Framework",section: "Action Framework",issues: ["shipping", "motivation"]  },  {text: "Challenges: remembering & acting",category: "Task Management",section: "Task Management",issues: ["focus", "overwhelm"]  },  {text: "Maintain clear priorities",category: "Task Management",section: "Task Management",issues: ["overwhelm", "focus"]  },  {text: "Sustained energy factors",category: "Task Management",section: "Task Management",issues: ["motivation", "focus"]  }];
+
+             // ================================================================
+             // === MODULE: Bored Mode Logic ===
+             // ================================================================
+             const BoredMode = (function() { const COOLDOWN = 60 * 60 * 1000; const ELSE_WINDOW = 10 * 60 * 1000; const MAX_ELSE = 2; let defaultActions = []; let state = {}; let timerInterval = null; let surpriseBtn, elseBtn, suggestionDiv, timerTextDiv, progressBarContainer, progressBarFill, customActionInput, addActionBtn; function getRandomSuggestion() { const all=[...defaultActions,...(state.userActions||[])]; if(all.length===0)return "Add custom actions in Settings!"; return all[Math.floor(Math.random()*all.length)]; } function displayCurrentState() { if (!suggestionDiv) return; if(state.currentSuggestion&&state.lastClick){ suggestionDiv.innerText=state.currentSuggestion; const now=Date.now(); elseBtn.style.display = (now-state.suggestionTime<ELSE_WINDOW && state.elseCount<MAX_ELSE && now-state.lastClick<COOLDOWN) ? (window.innerWidth<=600?"block":"inline-block") : "none"; } else { suggestionDiv.innerText=""; elseBtn.style.display="none"; } } function updateTimer() { if(!timerTextDiv || !progressBarContainer || !surpriseBtn) return; if(!state.lastClick){timerTextDiv.innerText="";progressBarContainer.style.display='none';progressBarFill.style.width='0%';surpriseBtn.disabled=false;return;} const now=Date.now(); const elapsed=now-state.lastClick; const remaining=COOLDOWN-elapsed; if(remaining>0){ const m=Math.floor(remaining/60000);const s=Math.floor((remaining%60000)/1000); timerTextDiv.innerText=`Try again in ${m}m ${s}s`; progressBarFill.style.width=`${Math.min((elapsed/COOLDOWN)*100,100)}%`; progressBarContainer.style.display='block'; surpriseBtn.disabled=true; } else { timerTextDiv.innerText="Ready for a new surprise!"; progressBarContainer.style.display='none'; progressBarFill.style.width='0%'; surpriseBtn.disabled=false; if(state.currentSuggestion && elseBtn) elseBtn.style.display='none'; } } function resetBoredState() { state={lastClick:null,suggestionTime:null,elseCount:0,currentSuggestion:"",userActions:state.userActions||[]}; saveToLocalStorage(LS_KEYS.boredState,state); if(elseBtn) elseBtn.style.display="none"; if(suggestionDiv) suggestionDiv.innerText=""; updateTimer(); } function saveBoredState() { saveToLocalStorage(LS_KEYS.boredState, state); } return { setup: (defaults, loadedState) => { defaultActions = defaults; state = loadedState || { userActions: [] }; if (!Array.isArray(state.userActions)) state.userActions = []; }, initDisplay: () => { if (!timerInterval) { updateTimer(); timerInterval = setInterval(updateTimer, 1000); } displayCurrentState(); }, cleanup: () => { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }, addListeners: () => { surpriseBtn = document.getElementById('surpriseBtn'); elseBtn = document.getElementById('elseBtn'); suggestionDiv = document.getElementById('suggestion'); timerTextDiv = document.getElementById('timerText'); progressBarContainer = document.getElementById('progressBarContainer'); progressBarFill = document.getElementById('progressBarFill'); customActionInput = document.getElementById('customActionInput'); addActionBtn = document.getElementById('addActionBtn'); if (surpriseBtn) surpriseBtn.addEventListener('click', () => { const now=Date.now(); if(surpriseBtn.disabled&&state.lastClick&&now-state.lastClick<COOLDOWN)return; if(state.lastClick&&now-state.lastClick>=COOLDOWN) resetBoredState(); const suggestion=getRandomSuggestion(); suggestionDiv.innerText=suggestion; state.lastClick=now; state.suggestionTime=now; state.elseCount=0; state.currentSuggestion=suggestion; progressBarFill.style.width='0%'; saveBoredState(); updateTimer(); displayCurrentState(); }); if (elseBtn) elseBtn.addEventListener('click', () => { const now=Date.now(); if(!state.suggestionTime||now-state.suggestionTime>=ELSE_WINDOW||state.elseCount>=MAX_ELSE||!state.lastClick||now-state.lastClick>=COOLDOWN){elseBtn.style.display="none";return;} let newSuggestion;let attempts=0;const all=[...defaultActions,...(state.userActions||[])]; const maxAttempts=all.length>1?all.length*2:1; do{newSuggestion=getRandomSuggestion();attempts++;} while(newSuggestion===state.currentSuggestion&&attempts<maxAttempts&&all.length>1); suggestionDiv.innerText=newSuggestion; state.elseCount++; state.currentSuggestion=newSuggestion; saveBoredState(); if(state.elseCount>=MAX_ELSE) elseBtn.style.display="none"; }); if (addActionBtn) addActionBtn.addEventListener('click', () => { const text=customActionInput.value.trim(); if(!text){showToast("Enter action.", "warning");return;} if(!state.userActions) state.userActions=[]; state.userActions.push(text); customActionInput.value=""; saveBoredState(); showToast(`Action added: "${text}"`, "success"); }); } }; })();
+             const defaultActionsBored = [ "🚶‍♂️ Take a 15-minute brisk walk outside", "📞 Call or text a friend", "🍳 Try a new quick recipe", "📖 Read a chapter of a book", "🧘 Do a 5-10 minute meditation", "🙏 Write 3 things you're grateful for", "🎧 Listen to a new podcast episode", "🤸 Do 10 minutes of stretching", "🧹 Tidy up one small area", "🎥 Watch a short TED Talk", "🎨 Draw or doodle for 15 minutes", "🍽️ Plan meals for the next two days", "🌱 Water your plants", "🎵 Listen to an album distraction-free", "🗣️ Learn 5 phrases in a new language", "❓ Do a quick online quiz", "✍️ Write a short poem/paragraph", "👛 Declutter your wallet/purse", "🌳 Step outside & observe for 5 minutes", "☁️ Look up at the clouds/stars", "🧩 Do a simple puzzle", "💻 Organize desktop files", "🐶 Watch funny animal videos", "🎤 Sing along loudly", "✈️ Browse a travel website" ];
+
+             // ==================================================================
+             // === MODULE: Stressed Mode Logic ===
+             // ==================================================================
+              const StressedMode = (function() { let tipsData = {}; let quotesData = []; let modeSelector, modeContent, randomModeBtn, interactiveModeBtn, allTipsModeBtn, randomModeDiv, interactiveModeDiv, allTipsModeDiv, randomTipDiv, newRandomTipBtn, questionContainer, tipsResultDiv, feelingTypeSpan, feelingTipsDiv, backToFeelingsBtn, optionBtns; function getRandomItem(array) { if(!array || array.length === 0) return "No tips available. Add some in Settings."; return array[Math.floor(Math.random() * array.length)]; } function displayRandomTip() { if (!randomTipDiv) return; randomTipDiv.innerHTML = `<p>${getRandomItem(quotesData)}</p>`; } function showFeelingTips(feeling) { if (!questionContainer || !tipsResultDiv || !feelingTypeSpan || !feelingTipsDiv) return; questionContainer.classList.add('hidden'); tipsResultDiv.classList.remove('hidden'); const map = { rudderless: 'Rudderless', overwhelmed: 'Overwhelmed', cluttered: 'Cluttered', control: 'Lacking Control', uncertain: 'Uncertain' }; feelingTypeSpan.textContent = map[feeling] || feeling; feelingTipsDiv.innerHTML = ''; if (tipsData[feeling] && tipsData[feeling].length > 0) { tipsData[feeling].forEach(tip => { const div = document.createElement('div'); div.className = 'tip-item'; div.textContent = tip; feelingTipsDiv.appendChild(div); }); } else { feelingTipsDiv.innerHTML = `<p>No tips found for this feeling. You can add some in the Settings view.</p>`; } } function populateAllTips() { if (!tipsData) return; for (const cat in tipsData) { const list = document.getElementById(`all-${cat}`); if (list) { list.innerHTML = ''; if (tipsData[cat] && tipsData[cat].length > 0) { tipsData[cat].forEach(tip => { const li = document.createElement('li'); li.textContent = tip; list.appendChild(li); }); } else { list.innerHTML = `<li>No tips defined.</li>`; } } } } function switchMode(mode) { if(!randomModeDiv || !interactiveModeDiv || !allTipsModeDiv) return; randomModeDiv.classList.add('hidden'); interactiveModeDiv.classList.add('hidden'); allTipsModeDiv.classList.add('hidden'); if (mode === 'random') { randomModeDiv.classList.remove('hidden'); displayRandomTip(); } else if (mode === 'interactive') { interactiveModeDiv.classList.remove('hidden'); if(questionContainer) questionContainer.classList.remove('hidden'); if(tipsResultDiv) tipsResultDiv.classList.add('hidden'); } else if (mode === 'all-tips') { allTipsModeDiv.classList.remove('hidden'); populateAllTips(); } } return { setup: (tips, quotes) => { tipsData = tips; quotesData = quotes; }, initDisplay: () => { switchMode('random'); }, addListeners: () => { modeSelector = document.querySelector('#stressed-view .mode-selector'); modeContent = document.getElementById('stressed-mode-content'); randomModeBtn = document.getElementById('random-mode-btn-stressed'); interactiveModeBtn = document.getElementById('interactive-mode-btn-stressed'); allTipsModeBtn = document.getElementById('all-tips-mode-btn-stressed'); randomModeDiv = document.getElementById('random-mode-stressed'); interactiveModeDiv = document.getElementById('interactive-mode-stressed'); allTipsModeDiv = document.getElementById('all-tips-mode-stressed'); randomTipDiv = document.getElementById('random-tip-stressed'); newRandomTipBtn = document.getElementById('new-random-tip-stressed'); questionContainer = document.getElementById('question-container-stressed'); tipsResultDiv = document.getElementById('tips-result-stressed'); feelingTypeSpan = document.getElementById('feeling-type-stressed'); feelingTipsDiv = document.getElementById('feeling-tips-stressed'); backToFeelingsBtn = document.getElementById('back-to-feelings-stressed'); optionBtns = interactiveModeDiv?.querySelectorAll('.option-btn'); if (randomModeBtn) randomModeBtn.addEventListener('click', () => switchMode('random')); if (interactiveModeBtn) interactiveModeBtn.addEventListener('click', () => switchMode('interactive')); if (allTipsModeBtn) allTipsModeBtn.addEventListener('click', () => switchMode('all-tips')); if (newRandomTipBtn) newRandomTipBtn.addEventListener('click', displayRandomTip); if (backToFeelingsBtn) backToFeelingsBtn.addEventListener('click', () => { if(questionContainer) questionContainer.classList.remove('hidden'); if(tipsResultDiv) tipsResultDiv.classList.add('hidden'); }); if (optionBtns) optionBtns.forEach(btn => btn.addEventListener('click', () => showFeelingTips(btn.getAttribute('data-feeling')))); } }; })();
+             const defaultAllTipsStressed = {  rudderless: [      "Set weekly/daily priorities",      "Break down tasks",      "Execute and pivot plans",      "Focus on quantity over quality for momentum",      "Get small things 'done'"    ],  overwhelmed: [    "List worries and see what's real vs. catastrophisation",    "Write it all down, brain dump, pick just any 1-2 items that matter today",    "Drop items until you're left with 2-3",    "You're doing better than you think; Step back and see what you've achieved.",    "Take a walk outside",    "Practice morning pages",    "Announce need for alone time",    "Remind yourself some commitments might be voluntary"  ],  cluttered: [    "Drop non-essential items",    "Finish lingering tasks",    "Limit media consumption",    "Uninterrupted me-time (music/nature sounds)",    "Control your morning time",    "Write it all down, brain dump, pick just any 1-2 items that matter today",    "Take a walk outside"  ],  control: [    "Remind yourself some commitments are voluntary",    "Reframe tasks as creative plays",    "Focus on tiny next steps",    "Walks in nature by yourself",    "Permit 2 hours free time daily. Priortize this slot first on your calendar. Everything else will need to move around."  ],  uncertain: [    "Write down issues and actions",    "Check if making it bigger than necessary",    "Get small things 'done'",    "Plans don't need to be perfect",    "Magic of action",    "Permit 2 hours free time daily - Let your mind wander, it's essential"  ],  generic: [    "Exercise",    "Uninterrupted me-time",    "Control morning time",    "Permit 2 hours free time",    "No drama",    "Magic of action",    "Plans don't need to be perfect, just execute and pivot.",    "Focus on quantity over quality to build momentum.",    "Set priorities to stay focused.",    "Break down tasks into smaller chunks.",    "Get small things 'done' to build momentum.",    "Commitments are voluntary.",    "Reframe tasks as creative plays.",    "Focus on tiny next steps.",    "Morning pages help center.",    "Walks help clear the mind.",    "Announce need for alone time."  ]};
+
+            // --- App Start ---
+            document.addEventListener('DOMContentLoaded', initializeApp);
+
+        })(); // End main IIFE
+    </script>
+
+</body>
+</html>
