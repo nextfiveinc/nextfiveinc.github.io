@@ -15,9 +15,9 @@ Stop waiting for the "big vacation" to have fun. This app helps you discover and
 
 <br/>
 
-| Get the App                                                                                                      |
+| Try the App                                                                                                      |
 | :--------------------------------------------------------------------------------------------------------------------- |
-| [**Download the App (microadventure.html)**](https://raw.githubusercontent.com/nextfiveinc/micro-adventures/refs/heads/main/microadventure.html)  _(Right-click > Save link As...)_                   |
+| **Click to launch** [**your own Micro-Adventures**](https://demo.nextfive.in/microadventures/)  |
 
 
 <br/>
