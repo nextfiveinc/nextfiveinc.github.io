@@ -15,10 +15,9 @@ Build confidence and resilience by turning fear into a game. Courage Compass is 
 
 <br/>
 
-| Get the App                                                                                                      |
+| Try the App                                                                                                      |
 | :--------------------------------------------------------------------------------------------------------------------- |
-| [**Download the App (courage-compass.html)**](https://raw.githubusercontent.com/nextfiveinc/courage_compass/refs/heads/main/courage_compass.html) _(Right-click > Save link As...)_                    |
-
+| **Click to** [**set your Courage Compass**](https://demo.nextfive.in/courageCompass/) and get over your fears |
 
 <br/>
 
